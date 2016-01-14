@@ -9,10 +9,10 @@ drop table client;
 --Client
 create table client (
 	mailClient varchar2(50) ,
-	nom varchar2(20),
-	prenom varchar2(20),
+	nom varchar2(50),
+	prenom varchar2(50),
 	adressePostale varchar2(50),
-	MDP varchar2(20),
+	MDP varchar2(50),
 	constraint client_pk primary key(mailClient)
 	
 );
@@ -20,7 +20,7 @@ create table client (
 -- Societe (inclus PhotoNum)
 create table Societe(
 	idS integer,
-	nomSociete varchar2(20),
+	nomSociete varchar2(50),
 	adresse varchar2(50),
 	preference integer,
 	delai integer,
@@ -83,7 +83,16 @@ create table Image(
 	constraint Image_fk foreign key(mailClient) references Client(mailClient),
 	constraint Image_check check (resolution > 0)
 );
+
+
 --Album
+create table Album(
+	idAlbum integer,
+	mailClient varchar2(50),
+	constraint Album_pk primary key(idAlbum),
+	constraint Album_fk foreign key (mailClient) references Client(mailClient)
+);
+
 
 -- Photo
 create table Photo(
@@ -97,5 +106,20 @@ create table Photo(
 	constraint photo_fk1 foreign key(idAlbum) references Album(idAlbum),
 	costraint photo_fk2 foreign key(idI) references Image(idI),
 	constraint photo_check1 check (numPage>=0)
+
 );
+
+
+--Livre
+create table Livre(
+	idAlbum integer,
+	preface varchar2(50),
+	postface varchar2(50),
+	photoCouverture integer,
+	titreLivre varchar2(50),
+	constraint Livre_pk primary key (idAlbum),
+	constraint Livre_fk1 foreign key (idAlbum) references Album (idAlbum),
+	constraint Livre_fk2 foreign key (photoCouverture) references Photo(idPhoto)
+	
 );
+
