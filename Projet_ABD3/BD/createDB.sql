@@ -123,3 +123,68 @@ create table Livre(
 	
 );
 
+--Calendrier
+create table Calendrier(
+	idAbum integer,
+	typeCalendrier varchar2(50),
+	photoCouverture integer,
+	constraint Calendrier_pk primary key (idAlbum),
+	constraint Calendrier_fk1 foreign key (idAlbum) references Album (idAlbum),
+	constraint Calendrier_fk2 foreign key (idCouverture) references Photo(idPhoto)
+);
+
+
+--Agenda
+create table Agenda(
+	idAlbum integer,
+	typeAgenda varchar2(50),
+	constraint Agenda_pk primary key (idAlbum),
+	constraint Agenda_fk foreign key (idAlbum) references Album (idAlbum)
+);
+
+--Commande
+create table Commande(
+	idCom integer,
+	mailClient varchar2(50),
+	prixTotal integer,
+	statutCommande varchar2(50),
+	constraint Commande_pk primary key (idCom),
+	constraint Commande_fk1 foreign key (mailClient) references Client(mailClient)
+):
+
+--Lot
+create table Lot(
+	idLot integer,
+	idCom integer,
+	idAlbum integer,
+	quantite integer,
+	idS integer,
+	constraint Lot_pk primary key (idLot),
+	constraint Lot_fk1 foreign key (idCom) references Commande (idCom),
+	constraint Lot_fk2 foreign key (idAlbum) references Album (idAlbum),
+	constraint Lot_fk3 foreign key (idS) references Societe(idS),
+	constraint Lot_check check(quatite >= 0)
+);
+
+--Livraison
+create table Livraison(
+	idLivraison integer,
+	idLot integer,
+	statutLivraison varchar2(50),
+	constraint Livraison_pk primary key (idLivraison),
+	constraint Livraison_fk foreign key (idLot) references Lot(idLot)
+);
+
+--CodePromo(idP, #mailClient, #CommandeGéneratrice, #CommandeUtilisation, Valeur)
+create table CodePromo(
+	idP integer,
+	mailClient varchar2(50),
+	CommandeGeneratrice integer,
+	CommandeUtilisation integer,
+	valeur integer,
+	constraint CodePromo_pk primary key (idP),
+	constraint CodePromo_fk1 foreign key (mailClient) references Client(mailClient),
+	constraint CodePromo_fk2 foreign key (CommandeGeneratrice) references Commande (idcom),
+	constraint CodePromo_fk3 foreign key (CommandeUtilisation) references Commande (idcom),
+	constraint CodePromo_check check (valeur >= 0)
+ );
