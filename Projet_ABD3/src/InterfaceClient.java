@@ -9,10 +9,10 @@ public class InterfaceClient {
 	private static Connection conn;
 	
 	public InterfaceClient(Connection conn){
-		this.conn = conn;
+		InterfaceClient.conn = conn;
 	}
 	
-	public static void CreationClient(Client client) throws SQLException{
+	public void CreationClient(Client client) throws SQLException{
 		
 		Statement stmt = conn.createStatement();
 		

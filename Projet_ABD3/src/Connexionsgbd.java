@@ -20,11 +20,16 @@ public class Connexionsgbd {
 
 			Connection conn = DriverManager.getConnection(dbUrl, username,
 					password);
-			
 			System.out.println("Vous etes connecté");
 			
+			InterfaceClient interfaceClient = new InterfaceClient(conn);
 			
-			//Client.AjoutClient();
+			Client client = new Client("Michel", "Mimich", "Michel@msn.fr", "un endroit dans le monde", "1234mdp");
+			
+			interfaceClient.CreationClient(client);
+			
+			
+			
 
 			SQLWarningsException.printWarnings(conn);
 			conn.close();

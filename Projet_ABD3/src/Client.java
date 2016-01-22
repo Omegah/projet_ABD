@@ -23,6 +23,36 @@ public class Client {
 		this.adressePostal = adressePostal;
 		this.motDePasse = motDePasse;
 		this.connectee = false;		
+	}
+
+
+	public String getNom() {
+		return nom;
+	}
+
+
+	public String getPrenom() {
+		return prenom;
+	}
+
+
+	public String getMail() {
+		return mail;
+	}
+
+
+	public String getAdressePostal() {
+		return adressePostal;
+	}
+
+
+	public String getMotDePasse() {
+		return motDePasse;
+	}
+
+
+	public boolean isConnectee() {
+		return connectee;
 	};
 	
 	
