@@ -38,9 +38,10 @@ public class InterfaceClient {
 		ResultSet res = req.executeQuery();
 		numImage = res.getInt(1);
 		
+		System.out.println("il y a " + numImage +" sur la base de données" );
 		
 		PreparedStatement st = conn.prepareStatement("insert into image values (?,?,?,?,?)");
-		st.setInt(1, numImage);
+		st.setInt(1, numImage+1);
 		st.setInt(2, 0);
 		st.setString(3, uRL);
 		st.setString(4, mail);
@@ -48,6 +49,8 @@ public class InterfaceClient {
 		st.setInt(6, resolution);
 		
 		st.executeQuery();
+		
+		System.out.println("Ajout d'une image ");
 		return false;
 	}
 
