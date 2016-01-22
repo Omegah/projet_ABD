@@ -16,7 +16,13 @@ public class InterfaceClient {
 		
 		Statement stmt = conn.createStatement();
 		
-		PreparedStatement st = conn.prepareStatement("insert into Client values ('Philipe@free.fr','Philipe','jean','Paris', 'pute')");
+		PreparedStatement st = conn.prepareStatement("insert into Client values (?,?,?,?,?)");
+		st.setString(1, client.getMail());
+		st.setString(2, client.getNom());
+		st.setString(3, client.getPrenom());
+		st.setString(4, client.getAdressePostal());
+		st.setString(5, client.getMotDePasse());
+		
 		st.executeQuery();
 		System.out.println("Ajout client");
 		
