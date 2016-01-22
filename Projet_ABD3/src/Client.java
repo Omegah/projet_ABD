@@ -25,7 +25,28 @@ public class Client {
 		this.connectee = false;		
 	}
 
-
+	public boolean AjoutImage(InterfaceClient interfaceClient){
+		int resolution;
+		String URL, information;
+		if(this.isConnectee())
+			System.out.print("entrez une l'URL de l'image :");
+		 	System.out.flush();
+		 	URL = LectureClavier.lireChaine();
+		 	System.out.print("Information de l'image :");
+		 	System.out.flush();
+		 	information = LectureClavier.lireChaine();
+		 	System.out.print("entrez une la résolution de l'image :");
+		 	System.out.flush();
+		 	resolution = LectureClavier.lireEntier(LectureClavier.lireChaine());
+			try {
+				return interfaceClient.Ajoutimage(getMail(),URL, information, resolution);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return false;
+	}
+	
 	public String getNom() {
 		return nom;
 	}
