@@ -11,7 +11,7 @@ jdbc.driver =  oracle.jdbc.OracleDriver
 database.url=  jdbc:oracle:thin:@im2ag-oracle.e.ujf-grenoble.fr:1521:ufrima
 
 #  Username  and  password  to  access  the  database
-database.username=  berthiey
+database.username=  aminc
 database.password=  bd2015
 _________________________________
 ______________________________________

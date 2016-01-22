@@ -21,7 +21,9 @@ public class Connexionsgbd {
 			Connection conn = DriverManager.getConnection(dbUrl, username,
 					password);
 			
+			System.out.println("Vous etes connecté");
 			//requetesbd.nbartistes(conn);
+			Client.AjoutClient(conn);
 
 			SQLWarningsException.printWarnings(conn);
 			conn.close();
