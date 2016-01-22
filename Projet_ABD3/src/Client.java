@@ -6,12 +6,28 @@ import java.sql.Statement;
 
 public class Client {
 	
-	public static void AjoutClient(Connection conn) throws SQLException{
-		Statement stmt = conn.createStatement();
+	private String nom;
+	private String prenom;
+	private String mail;
+	private String adressePostal;
+	private String motDePasse;
+	private boolean connectee;
+	
+	
+	public Client(String nom, String prenom, String mail, String adressePostal,
+			String motDePasse) {
 		
-		PreparedStatement st = conn.prepareStatement("insert into Client values ('Philipe@free.fr','Philipe','jean','Paris', 'pute')");
-		st.executeQuery();
-		System.out.println("Ajout client");
-		
-	}
+		this.nom = nom;
+		this.prenom = prenom;
+		this.mail = mail;
+		this.adressePostal = adressePostal;
+		this.motDePasse = motDePasse;
+		this.connectee = false;		
+	};
+	
+	
+	
+	
+	
+	
 }

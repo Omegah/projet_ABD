@@ -22,8 +22,9 @@ public class Connexionsgbd {
 					password);
 			
 			System.out.println("Vous etes connecté");
-			//requetesbd.nbartistes(conn);
-			Client.AjoutClient(conn);
+			
+			
+			//Client.AjoutClient();
 
 			SQLWarningsException.printWarnings(conn);
 			conn.close();
