@@ -24,10 +24,10 @@ public class Connexionsgbd {
 			
 			InterfaceClient interfaceClient = new InterfaceClient(conn);
 			
-			Client client = new Client("Michel", "Mimich", "Michel@msn.fr", "un endroit dans le monde", "1234mdp");
+			Client client = new Client("Michelle", "Mimicha", "Michel22@msn.fr", "un endroit dans le monde", "1234mdp");
 			
 			interfaceClient.CreationClient(client);
-			
+			client.AjoutImage(interfaceClient);
 			
 			
 

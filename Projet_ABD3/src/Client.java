@@ -28,7 +28,7 @@ public class Client {
 	public boolean AjoutImage(InterfaceClient interfaceClient){
 		int resolution;
 		String URL, information;
-		if(this.isConnectee())
+		if(true)
 			System.out.print("entrez une l'URL de l'image :");
 		 	System.out.flush();
 		 	URL = LectureClavier.lireChaine();
