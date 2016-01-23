@@ -4,6 +4,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.IsindexAction;
+
 public class InterfaceClient {
 
 	private static Connection conn;
@@ -84,7 +86,8 @@ public class InterfaceClient {
 			int idI, resolution;
 			String URL, mail, info;
 			boolean partage;
-			PreparedStatement req = conn.prepareStatement("select * from image where mailClient Like ?");
+			PreparedStatement req = conn
+					.prepareStatement("select * from image where mailClient Like ? or partage = true");
 			req.setString(1, mailC);
 			System.out.println("idI | partage | URL | mailClient | informationImage | resolution  ");
 			ResultSet res = req.executeQuery();
@@ -136,16 +139,18 @@ public class InterfaceClient {
 		}
 	}
 
-	// Ajout d'un livre : Livre(#idAlbum, préface, postface, #photoCouverture, titreLivre)
-	public void AjoutLivre(boolean a, int idA, String preface, String postface, int idPC, String titreL, String mailC) {
+	// Ajout d'un livre : Livre(#idAlbum, préface, postface, #photoCouverture,
+	// titreLivre)
+	public void AjoutLivre(boolean a, int idA, String preface, String postface, int idI, String titreL, String mailC) {
 		try {
 			Statement stmt = conn.createStatement();
-
+			int idPC;
 			if (a) {
 				PreparedStatement req = conn.prepareStatement("insert into Livre values (?,?,?,?,?)");
 				req.setInt(1, idA);
 				req.setString(2, preface);
 				req.setString(3, postface);
+				idPC = InterfaceClient.creerPhoto(idI,idA);
 				req.setInt(4, idPC);
 				req.setString(5, titreL);
 				req.executeQuery();
@@ -159,19 +164,20 @@ public class InterfaceClient {
 				ResultSet res = req.executeQuery();
 				int numAlbum = 0;
 				while (res.next())
-					numAlbum = res.getInt(1);
-				
+					numAlbum = res.getInt(1)+1;
+
 				PreparedStatement req1 = conn.prepareStatement("insert into Livre values (?,?,?,?,?)");
 				req1.setInt(1, numAlbum);
 				req1.setString(2, preface);
 				req1.setString(3, postface);
+				idPC = InterfaceClient.creerPhoto(idI,numAlbum);
 				req1.setInt(4, idPC);
 				req1.setString(5, titreL);
-				
+
 				req1.executeQuery();
 				conn.commit();
 				System.out.println("Ajout d'un livre : REUSSI !!");
-				
+
 			}
 
 		} catch (SQLException e) {
@@ -186,8 +192,52 @@ public class InterfaceClient {
 		}
 	}
 
-	public void AfficheTousPhoto(String mail) {
+	public void AfficheTousAlbum(String mail) {
 		// TODO Auto-generated method stub
-		
+
+	}
+//Creer une photo de l'image i : Photo(idPhoto,  titrePhoto,numPage, #idAlbum, #idI, commentaire)
+
+	public static int creerPhoto(int idI,int idAlbum) {
+		try {
+			
+			System.out.println("Donner un titre a la photo choisie : ");
+			System.out.flush();
+			String titreP = LectureClavier.lireChaine();
+
+			int numPage = LectureClavier.lireEntier("Donner le numero de la page dans l'album ");
+			
+			System.out.println("Donner une commentaire a la photo choisie : ");
+			System.out.flush();
+			String comment = LectureClavier.lireChaine();
+			
+			PreparedStatement req = conn.prepareStatement("select count(idPhoto) from Photo");
+			ResultSet res = req.executeQuery();
+			int numPhoto = 0;
+			while (res.next())
+				numPhoto = res.getInt(1)+1;
+			PreparedStatement req1 = conn.prepareStatement("insert into Photo values (?,?,?,?,?,?)");
+			req1.setInt(1, numPhoto);
+			req1.setString(2,titreP);
+			req1.setInt(3,numPage );
+			req1.setInt(4, idAlbum);
+			req1.setInt(5, idI);
+			req1.setString(6, comment);
+
+			req1.executeQuery();
+			conn.commit();
+			System.out.println("Creation de la photo : REUSSI !!");
+			return numPhoto;
+		} catch (SQLException e) {
+			System.out.println("Pb dans BD : ROLLBACK !!");
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		return 0;
 	}
 }
