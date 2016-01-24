@@ -8,6 +8,7 @@ public class Connexionsgbd {
 
 	public static void main(String args[]) {
 		try {
+			int choix;
 			String jdbcDriver, dbUrl, username, password;
 			DatabaseAccessProperties dap = new DatabaseAccessProperties(
 					configurationFile);
@@ -21,15 +22,20 @@ public class Connexionsgbd {
 			Connection conn = DriverManager.getConnection(dbUrl, username,
 					password);
 			conn.setAutoCommit(false);
-			
-			System.out.println("Vous etes connect�");
-			
 			InterfaceClient interfaceClient = new InterfaceClient(conn);
-			
-			Client client = new Client("Michelle", "Mimicha", "Michel22@msn.fr", "un endroit dans le monde", "1234mdp");
-			
-			interfaceClient.CreationClient(client);
-			client.AjoutImage(interfaceClient);
+			Client client = new Client(interfaceClient);
+			System.out.println("Vous etes connect�");
+			Menu.Acceuil();
+			choix = LectureClavier.lireEntier("votre choix ? ");
+			switch(choix){
+			case 1: client.inscription();
+					break;
+			default :
+				break;
+			}
+						
+			//interfaceClient.CreationClient(client);
+			//client.AjoutImage(interfaceClient);
 			
 			
 

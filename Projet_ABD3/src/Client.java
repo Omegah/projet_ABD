@@ -7,18 +7,50 @@ public class Client {
 	private String adressePostal;
 	private String motDePasse;
 	private boolean connectee;
-
-	public Client(String nom, String prenom, String mail, String adressePostal, String motDePasse) {
-		this.nom = nom;
-		this.prenom = prenom;
-		this.mail = mail;
-		this.adressePostal = adressePostal;
-		this.motDePasse = motDePasse;
-		this.connectee = false;
+	private InterfaceClient interfaceClient;
+	
+	public Client(InterfaceClient i) {
+		this.interfaceClient = i;
+	}
+	
+	public void inscription(){
+		String tempNom, tempPrenom, tempMail, tempAdresse, tempMotdepasse;
+		System.out.print("nom :");
+		System.out.flush();
+		tempNom = LectureClavier.lireChaine();
+		System.out.print("prenom :");
+		System.out.flush();
+		tempPrenom = LectureClavier.lireChaine();
+		System.out.print("mail :");
+		System.out.flush();
+		tempMail = LectureClavier.lireChaine();
+		System.out.print("adresse postal :");
+		System.out.flush();
+		tempAdresse = LectureClavier.lireChaine();
+		System.out.print("mot de passe :");
+		System.out.flush();
+		tempMotdepasse = LectureClavier.lireChaine();
+		if(interfaceClient.CreationClient(tempNom,tempPrenom, tempMail, tempAdresse, tempMotdepasse))
+			{
+			System.out.println("inscription réussit");
+			this.nom = tempNom;
+			this.prenom = tempPrenom;
+			this.mail = tempMail;
+			this.adressePostal = tempAdresse;
+			this.motDePasse = tempMotdepasse;
+			}
+		else{
+			System.out.println("Inscription échouer");
+		}
+		
+	}
+	
+	public void connection(){
+		
 	}
 	
 
-	public void AjoutImage(InterfaceClient interfaceClient) {
+	public void AjoutImage() {
 		int resolution;
 		String URL, information;
 		if (true) {
@@ -36,7 +68,7 @@ public class Client {
 		}
 	}
 
-	public void AjoutAlbum(InterfaceClient interfaceClient) {
+	public void AjoutAlbum() {
 		if (true) {
 			System.out.println("--- Ajout d'un album ---");
 			interfaceClient.AjoutAlbum(mail);
@@ -46,7 +78,7 @@ public class Client {
 	// Ajout d'un nouveau livre (Creer le livre sans referencer a un album
 	// existant) : Livre(#idAlbum, prÃ©face, postface, #photoCouverture,titreLivre)
 	// idI prend la valeur de n'importe quoi
-	public void AjoutNouveauLivre(InterfaceClient interfaceCLient) {
+	public void AjoutNouveauLivre() {
 		if (true) {
 			System.out.println("--- Ajout d'un livre ---");
 			System.out.println("Donner la preface du livre : ");
@@ -57,7 +89,7 @@ public class Client {
 			System.out.flush();
 			String postface = LectureClavier.lireChaine();
 
-			interfaceCLient.AfficheTousImages(mail);
+			interfaceClient.AfficheTousImages(mail);
 			int idI = LectureClavier.lireEntier("choisir l'id de l'image desire pour la couverture  :");
 			
 			
@@ -66,12 +98,12 @@ public class Client {
 			System.out.flush();
 			String titreL = LectureClavier.lireChaine();
 
-			interfaceCLient.AjoutLivre(false, 0, preface, postface, idI, titreL, mail);
+			interfaceClient.AjoutLivre(false, 0, preface, postface, idI, titreL, mail);
 		}
 	}
 
 	// transformation d'un album normal en livre
-	public void ConvertALivre(InterfaceClient interfaceClient) {
+	public void ConvertALivre() {
 		if (true) {
 			System.out.println("--- Ajout d'un livre apartir d'un album existant ---");
 			interfaceClient.AfficheTousAlbum(mail);

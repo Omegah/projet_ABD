@@ -14,20 +14,21 @@ public class InterfaceClient {
 		InterfaceClient.conn = conn;
 	}
 
-	public void CreationClient(Client client) {
+	public boolean CreationClient(String nom, String prenom, String mail, String adresse, String mdp) {
 		try {
 			Statement stmt = conn.createStatement();
 
 			PreparedStatement st = conn.prepareStatement("insert into Client values (?,?,?,?,?)");
-			st.setString(1, client.getMail());
-			st.setString(2, client.getNom());
-			st.setString(3, client.getPrenom());
-			st.setString(4, client.getAdressePostal());
-			st.setString(5, client.getMotDePasse());
+			st.setString(1, mail);
+			st.setString(2, nom);
+			st.setString(3, prenom);
+			st.setString(4, adresse);
+			st.setString(5, mdp);
 
 			st.executeQuery();
 			conn.commit();
 			System.out.println("Ajout client");
+			return true;
 		} catch (SQLException e) {
 			System.out.println("Pb dans BD : ROLLBACK !!");
 			e.printStackTrace();
@@ -38,7 +39,7 @@ public class InterfaceClient {
 				e1.printStackTrace();
 			}
 		}
-
+		return false;
 	}
 
 	public void Ajoutimage(String mail, String uRL, String information, int resolution) {
@@ -256,7 +257,7 @@ public class InterfaceClient {
 					MDP = res.getString(4);
 				
 					if(MDP.equals(motDePasse)){
-						return new Client(mail, nom, prenom, adresse, MDP);
+						//return new Client(mail, nom, prenom, adresse, MDP);
 					}
 					else
 						return null;
