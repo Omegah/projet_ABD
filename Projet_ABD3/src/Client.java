@@ -16,6 +16,7 @@ public class Client {
 		this.motDePasse = motDePasse;
 		this.connectee = false;
 	}
+	
 
 	public void AjoutImage(InterfaceClient interfaceClient) {
 		int resolution;

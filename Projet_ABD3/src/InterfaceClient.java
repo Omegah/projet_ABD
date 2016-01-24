@@ -240,4 +240,35 @@ public class InterfaceClient {
 		}
 		return 0;
 	}
+
+	public Client connection(String mail, String motDePasse) {
+			try {
+				Statement stmt = conn.createStatement();
+				String nom, prenom, adresse,MDP = null;
+				PreparedStatement req = conn
+						.prepareStatement("select nom, prenom, adressePostal, MDP from Client where mailClient = ? ");
+				req.setString(1, mail);
+				ResultSet res = req.executeQuery();
+				while (res.next()) {
+					nom = res.getString(1);
+					prenom = res.getString(2);
+					adresse = res.getString(3);
+					MDP = res.getString(4);
+				
+					if(MDP.equals(motDePasse)){
+						return new Client(mail, nom, prenom, adresse, MDP);
+					}
+					else
+						return null;
+				}
+			} catch (SQLException e) {
+				System.out.println("Pb dans BD : ROLLBACK !!");
+				e.printStackTrace();
+
+			}
+		
+		return null;
+		// TODO Auto-generated method stub
+		
+	}
 }

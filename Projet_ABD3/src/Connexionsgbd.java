@@ -21,6 +21,7 @@ public class Connexionsgbd {
 			Connection conn = DriverManager.getConnection(dbUrl, username,
 					password);
 			conn.setAutoCommit(false);
+			
 			System.out.println("Vous etes connect�");
 			
 			InterfaceClient interfaceClient = new InterfaceClient(conn);
