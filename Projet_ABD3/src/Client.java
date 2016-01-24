@@ -9,7 +9,6 @@ public class Client {
 	private boolean connectee;
 
 	public Client(String nom, String prenom, String mail, String adressePostal, String motDePasse) {
-
 		this.nom = nom;
 		this.prenom = prenom;
 		this.mail = mail;
@@ -30,7 +29,7 @@ public class Client {
 			System.out.flush();
 			information = LectureClavier.lireChaine();
 			System.out.flush();
-			resolution = LectureClavier.lireEntier("entrez une la resolution de l'image :");
+			resolution = LectureClavier.lireEntier("entrez la resolution de l'image :");
 			interfaceClient.Ajoutimage(getMail(), URL, information, resolution);
 			interfaceClient.AfficheTousImages(mail);
 		}
