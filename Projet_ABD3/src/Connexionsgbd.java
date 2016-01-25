@@ -8,10 +8,12 @@ public class Connexionsgbd {
 
 	public static void main(String args[]) {
 		try {
-			int choix;
+			int choix = 0;
+			//Variable pour savoir si on se connecte en tant qu'administrateur admin = 1 si on est admin 
+			int admin = 0;
 			String jdbcDriver, dbUrl, username, password;
-			DatabaseAccessProperties dap = new DatabaseAccessProperties(
-					configurationFile);
+			DatabaseAccessProperties dap = new DatabaseAccessProperties(configurationFile);
+			
 			jdbcDriver = dap.getJdbcDriver();
 			dbUrl = dap.getDatabaseUrl();
 			username = dap.getUsername();
@@ -19,25 +21,56 @@ public class Connexionsgbd {
 			// Load the database driver
 			Class.forName(jdbcDriver);
 
-			Connection conn = DriverManager.getConnection(dbUrl, username,
-					password);
+			Connection conn = DriverManager.getConnection(dbUrl, username, password);
 			conn.setAutoCommit(false);
+			
 			InterfaceClient interfaceClient = new InterfaceClient(conn);
 			Client client = new Client(interfaceClient);
-			System.out.println("Vous etes connect�");
-			Menu.Acceuil();
-			choix = LectureClavier.lireEntier("votre choix ? ");
-			switch(choix){
-			case 1: client.inscription();
-					break;
-			default :
-				break;
-			}
-						
-			//interfaceClient.CreationClient(client);
-			//client.AjoutImage(interfaceClient);
+			//System.out.println("Vous etes connect�");
 			
-			
+			do {
+				if(!client.isConnected()){
+					Menu.Acceuil();
+					choix = LectureClavier.lireEntier("votre choix ? ");
+					switch (choix) {
+					case 1:
+						client.inscription();
+
+						break;
+					case 2 : 
+						String mailC,mdp;
+						System.out.println("Donner votre mail identifiant : ");
+						mailC = LectureClavier.lireChaine();
+						System.out.println("Donner le mot de passe : ");
+						mdp = LectureClavier.lireChaine();
+						client = interfaceClient.connection(mailC, mdp);
+					case 3 :
+						//Creation admin avec interface client ?
+					default:
+						break;
+					}
+				}else if(client.isConnected() && admin == 0){
+					Menu.Client();
+					choix = LectureClavier.lireEntier("votre choix ? ");
+					switch(choix){
+					case 1 : 
+						client.AfficheTousImages();
+						break;
+					case 2 :
+						client.AjoutImage();
+						break;
+					case 3 : 
+						client.AfficheTousAlbums();
+						break;
+					default:
+						break;
+					}
+				}
+				
+			} while (choix != 99);
+
+			// interfaceClient.CreationClient(client);
+			// client.AjoutImage(interfaceClient);
 
 			SQLWarningsException.printWarnings(conn);
 			conn.close();

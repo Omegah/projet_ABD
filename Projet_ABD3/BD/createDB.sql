@@ -74,14 +74,15 @@ create table FormatSociete(
 --Image
 create table Image(
 	idI integer,
-	partage boolean,
+	partage char check (partage in (0,1)),,
 	URL varchar2(50),
 	mailClient varchar2(50),
 	informationImage varchar2(50),
 	resolution integer,
 	constraint Image_pk primary key(idI),
 	constraint Image_fk foreign key(mailClient) references Client(mailClient),
-	constraint Image_check check (resolution > 0)
+	constraint Image_check1 check (resolution > 0),
+
 );
 
 

@@ -32,22 +32,28 @@ public class Client {
 		tempMotdepasse = LectureClavier.lireChaine();
 		if(interfaceClient.CreationClient(tempNom,tempPrenom, tempMail, tempAdresse, tempMotdepasse))
 			{
-			System.out.println("inscription réussit");
+			System.out.println("inscription rï¿½ussit");
 			this.nom = tempNom;
 			this.prenom = tempPrenom;
 			this.mail = tempMail;
 			this.adressePostal = tempAdresse;
 			this.motDePasse = tempMotdepasse;
+			this.connectee = true;
 			}
 		else{
-			System.out.println("Inscription échouer");
+			System.out.println("Inscription ï¿½chouer");
 		}
 		
 	}
 	
-	public void connection(){
-		
-	}
+//	public void connection(){
+//		String mailC,mdp;
+//		System.out.println("Donner votre mail identifiant : ");
+//		mailC = LectureClavier.lireChaine();
+//		System.out.println("Donner le mot de passe : ");
+//		mdp = LectureClavier.lireChaine();
+//		interfaceClient.connection(mailC, mdp);
+//	}
 	
 
 	public void AjoutImage() {
@@ -150,8 +156,17 @@ public class Client {
 		return motDePasse;
 	}
 
-	public boolean isConnectee() {
+	public boolean isConnected() {
 		return connectee;
+	}
+
+	public void AfficheTousImages() {
+		this.interfaceClient.AfficheTousImages(mail);
+		
+	}
+
+	public void AfficheTousAlbums() {
+		interfaceClient.AfficheTousAlbum(mail);		
 	};
 
 }

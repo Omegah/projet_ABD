@@ -88,8 +88,10 @@ public class InterfaceClient {
 			String URL, mail, info;
 			boolean partage;
 			PreparedStatement req = conn
-					.prepareStatement("select * from image where mailClient Like ? or partage = true");
+					.prepareStatement("select * from image where mailClient Like ? or partage = ?");
 			req.setString(1, mailC);
+			req.setInt(2, 1);
+			System.out.println("** Tous les images disponibles **");
 			System.out.println("idI | partage | URL | mailClient | informationImage | resolution  ");
 			ResultSet res = req.executeQuery();
 			while (res.next()) {
@@ -102,6 +104,7 @@ public class InterfaceClient {
 				System.out.println(
 						idI + " | " + partage + " | " + URL + " | " + mail + " | " + info + " | " + resolution);
 			}
+			System.out.println("\n \n");
 		} catch (SQLException e) {
 			System.out.println("Pb dans BD : ROLLBACK !!");
 			e.printStackTrace();
