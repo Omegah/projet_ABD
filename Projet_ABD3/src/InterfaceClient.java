@@ -110,8 +110,8 @@ public class InterfaceClient {
 		}
 	}
 
-	// Ajout d'un livre : Livre(#idAlbum, préface, postface, #photoCouverture,
-	// titreLivre)
+	// Ajout d'un livre : Livre(#idAlbum, préface, postface, #photoCouverture, titreLivre)
+	// var a pour dire si on creer un nouveau livre ou transformer un album normal en livre a = true => transformer
 	public void AjoutLivre(boolean a, int idA, String preface, String postface, int idI, String titreL, String mailC) {
 		try {
 			Statement stmt = conn.createStatement();
@@ -135,8 +135,8 @@ public class InterfaceClient {
 				ResultSet res = req.executeQuery();
 				int numAlbum = 0;
 				while (res.next())
-					numAlbum = res.getInt(1)+1;
-
+					numAlbum = res.getInt(1);
+			
 				PreparedStatement req1 = conn.prepareStatement("insert into Livre values (?,?,?,?,?)");
 				req1.setInt(1, numAlbum);
 				req1.setString(2, preface);

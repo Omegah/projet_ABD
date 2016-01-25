@@ -62,6 +62,8 @@ public class Connexionsgbd {
 					case 3 : 
 						client.AfficheTousAlbums();
 						break;
+					case 4 :
+						client.AjoutAlbum();
 					default:
 						break;
 					}
