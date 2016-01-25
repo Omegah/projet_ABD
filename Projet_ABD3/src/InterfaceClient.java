@@ -78,40 +78,7 @@ public class InterfaceClient {
 		}
 
 	}
-	// Affiche la table pour un client : Image(idI, partagé, URL, #mailCLient,
-	// informationImage, résolution)
-
-	public void AfficheTousImages(String mailC) {
-		try {
-			Statement stmt = conn.createStatement();
-			int idI, resolution;
-			String URL, mail, info;
-			boolean partage;
-			PreparedStatement req = conn
-					.prepareStatement("select * from image where mailClient Like ? or partage = ?");
-			req.setString(1, mailC);
-			req.setInt(2, 1);
-			System.out.println("** Tous les images disponibles **");
-			System.out.println("idI | partage | URL | mailClient | informationImage | resolution  ");
-			ResultSet res = req.executeQuery();
-			while (res.next()) {
-				idI = res.getInt(1);
-				partage = res.getBoolean(2);
-				URL = res.getString(3);
-				mail = res.getString(4);
-				info = res.getString(5);
-				resolution = res.getInt(6);
-				System.out.println(
-						idI + " | " + partage + " | " + URL + " | " + mail + " | " + info + " | " + resolution);
-			}
-			System.out.println("\n \n");
-		} catch (SQLException e) {
-			System.out.println("Pb dans BD : ROLLBACK !!");
-			e.printStackTrace();
-
-		}
-	}
-
+	
 	// Ajout Album Album(idAlbum, #mailCLient)
 	public void AjoutAlbum(String mailC) {
 		try {
@@ -195,9 +162,48 @@ public class InterfaceClient {
 			}
 		}
 	}
+	// Affiche la table pour un client : Image(idI, partagé, URL, #mailCLient,
+		// informationImage, résolution)
 
+		public void AfficheTousImages(String mailC) {
+			try {
+				Statement stmt = conn.createStatement();
+				int idI, resolution;
+				String URL, mail, info;
+				boolean partage;
+				PreparedStatement req = conn
+						.prepareStatement("select * from image where mailClient Like ? or partage = ?");
+				req.setString(1, mailC);
+				req.setInt(2, 1);
+				System.out.println("** Tous les images disponibles **");
+				System.out.println("idI | partage | URL | mailClient | informationImage | resolution  ");
+				ResultSet res = req.executeQuery();
+				while (res.next()) {
+					idI = res.getInt(1);
+					partage = res.getBoolean(2);
+					URL = res.getString(3);
+					mail = res.getString(4);
+					info = res.getString(5);
+					resolution = res.getInt(6);
+					System.out.println(
+							idI + " | " + partage + " | " + URL + " | " + mail + " | " + info + " | " + resolution);
+				}
+				System.out.println("\n \n");
+			} catch (SQLException e) {
+				System.out.println("Pb dans BD : ROLLBACK !!");
+				e.printStackTrace();
+
+			}
+		}
+//Afficher les album d'un client : Album(idI,mailClient)
 	public void AfficheTousAlbum(String mail) {
-		// TODO Auto-generated method stub
+	/*try{
+		
+	}catch (SQLException e) {
+		System.out.println("Pb dans BD : ROLLBACK !!");
+		e.printStackTrace();
+
+	}*/
 
 	}
 //Creer une photo de l'image i : Photo(idPhoto,  titrePhoto,numPage, #idAlbum, #idI, commentaire)
