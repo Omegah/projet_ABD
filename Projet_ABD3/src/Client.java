@@ -105,120 +105,43 @@ public class Client {
 	}
 
 	private void AjoutLivre() {
-		boolean a;
-		System.out.println(
-				"--- Creation d'un livre --- \n** 1- Creer un livre a partir un album existant \n** 2- Creer un nouveau livre \n");
-		int choixC = LectureClavier.lireEntier("Votre choix?");
-		switch (choixC) {
-		case 1:
-			ConvertALivre();
-			break;
-		case 2:
-			AjoutNouveauLivre();
-			break;
-		default:
-			break;
-		}
+	
+		System.out.println("--- Ajout d'un livre ---");
+		System.out.println("Donner la preface du livre : ");
+		System.out.flush();
+		String preface = LectureClavier.lireChaine();
+
+		System.out.println("Donner la postface du livre : ");
+		System.out.flush();
+		String postface = LectureClavier.lireChaine();
+
+		interfaceClient.AfficheTousImages(mail);
+		int idI = LectureClavier.lireEntier("Choisir une image de couverture de la liste suivante :");
+
+		System.out.println("Donner le titre du livre : ");
+		System.out.flush();
+		String titreL = LectureClavier.lireChaine();
+
+		interfaceClient.AjoutLivre(preface, postface, idI, titreL, mail);
 
 	}
 
 	private void AjoutCalendrier() {
 		boolean a;
 		System.out.println(
-				"--- Creation d'un Calendrier --- \n** 1- Creer un calendrier a partir un album existant \n** 2- Creer un nouveau calendrier \n");
-		int choixC = LectureClavier.lireEntier("Votre choix?");
-		switch (choixC) {
-		case 1:
-			AjoutNouveauCalendrier();
-			break;
-		case 2:
-			ConvertACalendrier();
-			break;
-		default:
-			break;
-		}
+				"--- Creation d'un Calendrier --- ");
+	
 
 	}
 //Calendrier( #idAlbum,  typeCalendrier,#photoCouverture) 
 
-	private void ConvertACalendrier() {
-	String typeC;
-			System.out.println("--- Ajout d'un calendrier apartir d'un album existant ---");
-			interfaceClient.AfficheTousAlbum(mail);
 
-			int idA = LectureClavier.lireEntier("Choisir un album de la liste precedente : ");
 
-			int type = LectureClavier.lireEntier("Donner le type du calendrier  : \n1- bureau\n2-mural ");
-			if(type==1)typeC="bureau";else typeC="mural";
 
-			interfaceClient.AfficheTousImages(mail);
-			int idp = LectureClavier.lireEntier("choisit une photo pour la couverture (Donner l'id ) :");
 
-			
 
-			interfaceClient.AjoutCalendrier(true,typeC, idA, idp,mail);
-		
+	
 
-	}
-
-	private void AjoutNouveauCalendrier() {
-		// TODO Auto-generated method stub
-
-	}
-
-	// Ajout d'un nouveau livre (Creer le livre sans referencer a un album
-	// existant) : Livre(#idAlbum, préface, postface,
-	// #photoCouverture,titreLivre)
-	// idI prend la valeur de n'importe quoi
-	public void AjoutNouveauLivre() {
-		if (true) {
-			System.out.println("--- Ajout d'un livre ---");
-			System.out.println("Donner la preface du livre : ");
-			System.out.flush();
-			String preface = LectureClavier.lireChaine();
-
-			System.out.println("Donner la postface du livre : ");
-			System.out.flush();
-			String postface = LectureClavier.lireChaine();
-
-			interfaceClient.AfficheTousImages(mail);
-			int idI = LectureClavier.lireEntier("Choisir une image de couverture de la liste suivante :");
-
-			System.out.println("Donner le titre du livre : ");
-			System.out.flush();
-			String titreL = LectureClavier.lireChaine();
-
-			interfaceClient.AjoutLivre(false, 0, preface, postface, idI, titreL, mail);
-		}
-	}
-
-	// transformation d'un album normal en livre
-	public void ConvertALivre() {
-		if (true) {
-			System.out.println("--- Ajout d'un livre apartir d'un album existant ---");
-			interfaceClient.AfficheTousAlbum(mail);
-
-			int idI = LectureClavier.lireEntier("Choisir un album de la liste precedente : ");
-
-			System.out.println("Donner la preface du livre : ");
-			System.out.flush();
-			String preface = LectureClavier.lireChaine();
-
-			System.out.println("Donner la postface du livre : ");
-			System.out.flush();
-			String postface = LectureClavier.lireChaine();
-
-			interfaceClient.AfficheTousImages(mail);
-			int idp = LectureClavier.lireEntier("choisit une photo pour la couverture (Donner l'id ) :");
-
-			System.out.println("Donner le titre du livre : ");
-			System.out.flush();
-			String titreL = LectureClavier.lireChaine();
-
-			interfaceClient.AjoutLivre(true, idI, preface, postface, idp, titreL, mail);
-		}
-
-	}
 
 	public String getNom() {
 		return nom;

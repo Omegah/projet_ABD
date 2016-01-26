@@ -112,23 +112,10 @@ public class InterfaceClient {
 
 	// Ajout d'un livre : Livre(#idAlbum, préface, postface, #photoCouverture, titreLivre)
 	// var a pour dire si on creer un nouveau livre ou transformer un album normal en livre a = true => transformer
-	public void AjoutLivre(boolean a, int idA, String preface, String postface, int idI, String titreL, String mailC) {
+	public void AjoutLivre(String preface, String postface, int idI, String titreL, String mailC) {
 		try {
 			Statement stmt = conn.createStatement();
 			int idPC;
-			if (a) {
-				PreparedStatement req = conn.prepareStatement("insert into Livre values (?,?,?,?,?)");
-				req.setInt(1, idA);
-				req.setString(2, preface);
-				req.setString(3, postface);
-				idPC = InterfaceClient.creerPhoto(idI,idA);
-				req.setInt(4, idPC);
-				req.setString(5, titreL);
-				req.executeQuery();
-
-				conn.commit();
-				System.out.println("Ajout du livre : REUSSI !!");
-			} else {
 
 				AjoutAlbum(mailC);
 				PreparedStatement req = conn.prepareStatement("select count(idAlbum) from Album");
@@ -149,7 +136,7 @@ public class InterfaceClient {
 				conn.commit();
 				System.out.println("Ajout du livre : REUSSI !!");
 
-			}
+			
 
 		} catch (SQLException e) {
 			System.out.println("Pb dans BD : ROLLBACK !!");
@@ -282,22 +269,12 @@ public class InterfaceClient {
 		
 	}
 
-	public void AjoutCalendrier(boolean a, String typeC, int idA, int idp, String mailC) {
+	public void AjoutCalendrier( String typeC, int idA, int idp, String mailC) {
 	
 		try {
 			Statement stmt = conn.createStatement();
 			int idPC;
-			if (a) {
-				PreparedStatement req = conn.prepareStatement("insert into Calendrier values (?,?,?)");
-				req.setInt(1, idA);
-				req.setString(2, typeC);
-				idPC = InterfaceClient.creerPhoto(idp,idA);
-				req.setInt(3, idPC);
-				req.executeQuery();
-
-				conn.commit();
-				System.out.println("Ajout du calendrier : REUSSI !!");
-			} else {
+			
 
 				AjoutAlbum(mailC);
 				PreparedStatement req = conn.prepareStatement("select count(idAlbum) from Album");
@@ -316,7 +293,7 @@ public class InterfaceClient {
 				conn.commit();
 				System.out.println("Ajout du calendrier : REUSSI !!");
 
-			}
+			
 
 		} catch (SQLException e) {
 			System.out.println("Pb dans BD : ROLLBACK !!");
@@ -329,9 +306,18 @@ public class InterfaceClient {
 			}
 		}
 	}
-
+	
+	//Client(mailClient, nom, prenom, adressePostal, MDP)
 	public void AfficheTousClients() {
-		// TODO Auto-generated method stub
+		try{
+		PreparedStatement req = conn.prepareStatement("select mailClient,nom,prenom,adressePostale,MDP from Client");
+		ResultSet res = req.executeQuery();
+		System.out.println("-- La liste des clients -- ");
+		System.out.println("mailClient | Nom | Prenom | Adresse Postale | MDP ");
 		
+		}catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 }
