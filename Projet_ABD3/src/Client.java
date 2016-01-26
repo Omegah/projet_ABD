@@ -249,7 +249,23 @@ this.adressePostal=adresse;
 		}
 
 	}
-
+	public void AjoutAgenda() {
+		if (true) {
+			System.out.println("--- Ajout d'un livre ---");
+			System.out.println("**** Type d'agenda ***");
+			System.out.println("** 1- Journalier (365 pages)");
+			System.out.println("** 2- Hebdomadaire (56 pages)");
+			System.out.println("**********************");
+			int choix = LectureClavier.lireEntier("Choisir le type d'agenda : ");
+			
+			if(choix == 1)
+				interfaceClient.AjoutAgenda( "Journalier", mail);
+			else if(choix ==2)				
+				interfaceClient.AjoutAgenda( "Hebdomadaire", mail);
+		}
+	}
+	
+	
 	public String getNom() {
 		return nom;
 	}
