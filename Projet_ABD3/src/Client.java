@@ -105,43 +105,48 @@ public class Client {
 	}
 
 	private void AjoutLivre() {
-	
-		System.out.println("--- Ajout d'un livre ---");
-		System.out.println("Donner la preface du livre : ");
-		System.out.flush();
-		String preface = LectureClavier.lireChaine();
+		if (true) {
+			System.out.println("--- Ajout d'un livre ---");
+			System.out.println("Donner la preface du livre : ");
+			System.out.flush();
+			String preface = LectureClavier.lireChaine();
 
-		System.out.println("Donner la postface du livre : ");
-		System.out.flush();
-		String postface = LectureClavier.lireChaine();
+			System.out.println("Donner la postface du livre : ");
+			System.out.flush();
+			String postface = LectureClavier.lireChaine();
 
-		interfaceClient.AfficheTousImages(mail);
-		int idI = LectureClavier.lireEntier("Choisir une image de couverture de la liste suivante :");
+			interfaceClient.AfficheTousImages(mail);
+			int idI = LectureClavier.lireEntier("Choisir une image de couverture de la liste suivante :");
 
-		System.out.println("Donner le titre du livre : ");
-		System.out.flush();
-		String titreL = LectureClavier.lireChaine();
+			System.out.println("Donner le titre du livre : ");
+			System.out.flush();
+			String titreL = LectureClavier.lireChaine();
 
-		interfaceClient.AjoutLivre(preface, postface, idI, titreL, mail);
+			interfaceClient.AjoutLivre(preface, postface, idI, titreL, mail);
+		}
 
 	}
 
 	private void AjoutCalendrier() {
-		boolean a;
+		String typeC;
 		System.out.println(
-				"--- Creation d'un Calendrier --- ");
-	
+				"--- Creation d'un Calendrier --- \n** 1- Creer un calendrier a partir un album existant \n** 2- Creer un nouveau calendrier \n");
+
+		int type = LectureClavier.lireEntier("Donner le type du calendrier  : \n1- bureau\n2-mural ");
+		if(type==1)typeC="bureau";else typeC="mural";
+
+		interfaceClient.AfficheTousImages(mail);
+		int idp = LectureClavier.lireEntier("choisit une photo pour la couverture (Donner l'id ) :");
+
+		
+
+		interfaceClient.AjoutCalendrier(typeC, idp,mail);
 
 	}
-//Calendrier( #idAlbum,  typeCalendrier,#photoCouverture) 
-
-
-
 
 
 
 	
-
 
 	public String getNom() {
 		return nom;

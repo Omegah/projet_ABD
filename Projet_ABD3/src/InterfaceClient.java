@@ -41,6 +41,35 @@ public class InterfaceClient {
 		}
 		return false;
 	}
+	public Client connection(String mail, String motDePasse) {
+		try {
+			Statement stmt = conn.createStatement();
+			String nom, prenom, adresse,MDP = null;
+			PreparedStatement req = conn
+					.prepareStatement("select nom, prenom, adressePostal, MDP from Client where mailClient = ? ");
+			req.setString(1, mail);
+			ResultSet res = req.executeQuery();
+			while (res.next()) {
+				nom = res.getString(1);
+				prenom = res.getString(2);
+				adresse = res.getString(3);
+				MDP = res.getString(4);
+			
+				if(MDP.equals(motDePasse)){
+					return new Client(mail, nom, prenom, adresse, MDP);
+				}
+				else
+					return null;
+			}
+		} catch (SQLException e) {
+			System.out.println("Pb dans BD : ROLLBACK !!");
+			e.printStackTrace();
+
+		}
+	
+	return null;
+	
+}
 
 	public void Ajoutimage(String mail, String uRL, String information, int resolution) {
 		int numImage = 0;
@@ -149,6 +178,44 @@ public class InterfaceClient {
 			}
 		}
 	}
+	
+	public void AjoutCalendrier( String typeC, int idp, String mailC) {
+		
+		try {
+			Statement stmt = conn.createStatement();
+			int idPC;
+			
+
+				AjoutAlbum(mailC);
+				PreparedStatement req = conn.prepareStatement("select count(idAlbum) from Album");
+				ResultSet res = req.executeQuery();
+				int numAlbum = 0;
+				while (res.next())
+					numAlbum = res.getInt(1);
+			
+				PreparedStatement req1 = conn.prepareStatement("insert into Calendrier values (?,?,?)");
+				req1.setInt(1, numAlbum);
+				req1.setString(2, typeC);
+				idPC = InterfaceClient.creerPhoto(idp,numAlbum);
+				req1.setInt(3 , idPC);
+
+				req1.executeQuery();
+				conn.commit();
+				System.out.println("Ajout du calendrier : REUSSI !!");
+
+			
+
+		} catch (SQLException e) {
+			System.out.println("Pb dans BD : ROLLBACK !!");
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
 	// Affiche la table pour un client : Image(idI, partagé, URL, #mailCLient,
 		// informationImage, résolution)
 
@@ -238,74 +305,8 @@ public class InterfaceClient {
 		return 0;
 	}
 
-	public Client connection(String mail, String motDePasse) {
-			try {
-				Statement stmt = conn.createStatement();
-				String nom, prenom, adresse,MDP = null;
-				PreparedStatement req = conn
-						.prepareStatement("select nom, prenom, adressePostal, MDP from Client where mailClient = ? ");
-				req.setString(1, mail);
-				ResultSet res = req.executeQuery();
-				while (res.next()) {
-					nom = res.getString(1);
-					prenom = res.getString(2);
-					adresse = res.getString(3);
-					MDP = res.getString(4);
-				
-					if(MDP.equals(motDePasse)){
-						return new Client(mail, nom, prenom, adresse, MDP);
-					}
-					else
-						return null;
-				}
-			} catch (SQLException e) {
-				System.out.println("Pb dans BD : ROLLBACK !!");
-				e.printStackTrace();
-
-			}
-		
-		return null;
-		// TODO Auto-generated method stub
-		
-	}
-
-	public void AjoutCalendrier( String typeC, int idA, int idp, String mailC) {
 	
-		try {
-			Statement stmt = conn.createStatement();
-			int idPC;
-			
-
-				AjoutAlbum(mailC);
-				PreparedStatement req = conn.prepareStatement("select count(idAlbum) from Album");
-				ResultSet res = req.executeQuery();
-				int numAlbum = 0;
-				while (res.next())
-					numAlbum = res.getInt(1);
-			
-				PreparedStatement req1 = conn.prepareStatement("insert into Calendrier values (?,?,?)");
-				req1.setInt(1, numAlbum);
-				req1.setString(2, typeC);
-				idPC = InterfaceClient.creerPhoto(idp,numAlbum);
-				req1.setInt(3 , idPC);
-
-				req1.executeQuery();
-				conn.commit();
-				System.out.println("Ajout du calendrier : REUSSI !!");
-
-			
-
-		} catch (SQLException e) {
-			System.out.println("Pb dans BD : ROLLBACK !!");
-			e.printStackTrace();
-			try {
-				conn.rollback();
-			} catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		}
-	}
+	
 	
 	//Client(mailClient, nom, prenom, adressePostal, MDP)
 	public void AfficheTousClients() {
