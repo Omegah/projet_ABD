@@ -95,6 +95,10 @@ public class Connexionsgbd {
 							
 					case 8 :
 							client.AjouterLot();
+							break;
+					case 9 : 
+						client.PartageImage();
+						break;
 					case 99 :
 						client.deconnecter();
 						break;
@@ -106,10 +110,10 @@ public class Connexionsgbd {
 					Menu.Administrateur();
 					choix = LectureClavier.lireEntier("votre choix ? ");
 					switch(choix){
-					case 1 : 
+					case 1 :   //1- Afficher les prestataires
 						interfaceGestion.AfficherPrestataires();
 						break;
-					case 2 :
+					case 2 : //2- Ajouter un prestataire
 						String nom,adresse;
 						int delai,pref;
 						System.out.println("Renseignez le nom du prestataire : ");
@@ -120,30 +124,55 @@ public class Connexionsgbd {
 						delai =LectureClavier.lireEntier("Renseignez le déla maximum du prestataire :");
 						interfaceGestion.AjoutPrestataire(nom, adresse, pref, delai);
 						break;
-					case 3 : 
+					case 3 :// Supprimer un prestataire
 						String nom2;
 						System.out.println("Renseignez le nom du prestataire a supprimer : ");
 						nom2 = LectureClavier.lireChaine();
 						interfaceGestion.supprimerPrestataire(nom2);;
 						break;
-					case 4 :
+					case 4 : //Afficher les dispositifs/formats d'un prestataire
 						String nom3;
 						System.out.println("Renseignez le nom du prestataire : ");
 						nom3 = LectureClavier.lireChaine();
 						interfaceGestion.AfficherDispositifsFormats(nom3);
 						break;
-					case 5 : 
+					case 5 : //5- Ajouter un dispositif pour un prestataire
 						String nom4;
 						System.out.println("Renseignez le nom du prestataire: ");
 						nom4 = LectureClavier.lireChaine();
-						interfaceGestion.AfficherDispositifsFormats(nom4);
+						interfaceGestion.AjoutDispositif(nom4);
 						break;
-					case 6 : 
-						String nom5;
-						System.out.println("Renseignez le nom du prestataire: ");
-						nom5 = LectureClavier.lireChaine();
+					case 6 : //Supprimer un dispositif pour un prestataire
 						int idD = LectureClavier.lireEntier("Renseignez l'id du dispositif a supprimer : ");
-						interfaceGestion.supprimerDispositif(idD, nom5);
+						interfaceGestion.supprimerDispositif(idD);
+						break;
+					case 7 : //7- Ajouter un format pour un dispositif 
+						String nom6;
+						System.out.println("Renseignez le nom du prestataire : ");
+						nom6 = LectureClavier.lireChaine();
+						int idD2 = LectureClavier.lireEntier("Renseignez l'id du dispositif : ");
+						int stock = LectureClavier.lireEntier("Renseignez le stock pour ce format : ");
+						float prixU = LectureClavier.lireFloat("Renseignez  le prix Unitaire pour ce format : ");
+						int tirageJour = LectureClavier.lireEntier("Renseignez le tirage maximum par jour pour ce format/dispositif : ");
+
+					//	interfaceGestion.AjoutFormatSociete(idD2,idF, stock, prixU, tirageJour, nom6);
+						break;
+					case 8 : // 8 - Ajouter un Format
+						System.out.println("Renseignez la taille du format : ");
+						String taille = LectureClavier.lireChaine();
+						int nbPixel = LectureClavier.lireEntier("Renseignez  le nombre de pixel du format : ");
+						System.out.println("Renseignez le nom du format : ");
+						String libelle = LectureClavier.lireChaine();
+
+						interfaceGestion.ajouterFormat(taille, nbPixel, libelle);
+					case 9 : //9- 
+						
+						break;
+					case 10 :  // 10 Deconnecter
+						
+						break;
+					case 99 : //99- Quitter l'application
+						System.exit(0);;
 						break;
 					default:
 						break;
@@ -151,7 +180,7 @@ public class Connexionsgbd {
 				}
 				
 			} while (choix != 999);
-
+			
 			// interfaceClient.CreationClient(client);
 			// client.AjoutImage(interfaceClient);
 
