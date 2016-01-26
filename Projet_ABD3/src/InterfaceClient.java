@@ -41,6 +41,35 @@ public class InterfaceClient {
 		}
 		return false;
 	}
+	public Client connection(String mail, String motDePasse) {
+		try {
+			Statement stmt = conn.createStatement();
+			String nom, prenom, adresse,MDP = null;
+			PreparedStatement req = conn
+					.prepareStatement("select nom, prenom, adressePostal, MDP from Client where mailClient = ? ");
+			req.setString(1, mail);
+			ResultSet res = req.executeQuery();
+			while (res.next()) {
+				nom = res.getString(1);
+				prenom = res.getString(2);
+				adresse = res.getString(3);
+				MDP = res.getString(4);
+			
+				if(MDP.equals(motDePasse)){
+					return new Client(mail, nom, prenom, adresse, MDP);
+				}
+				else
+					return null;
+			}
+		} catch (SQLException e) {
+			System.out.println("Pb dans BD : ROLLBACK !!");
+			e.printStackTrace();
+
+		}
+	
+	return null;
+	
+}
 
 	public void Ajoutimage(String mail, String uRL, String information, int resolution) {
 		int numImage = 0;
@@ -112,23 +141,10 @@ public class InterfaceClient {
 
 	// Ajout d'un livre : Livre(#idAlbum, préface, postface, #photoCouverture, titreLivre)
 	// var a pour dire si on creer un nouveau livre ou transformer un album normal en livre a = true => transformer
-	public void AjoutLivre(boolean a, int idA, String preface, String postface, int idI, String titreL, String mailC) {
+	public void AjoutLivre(String preface, String postface, int idI, String titreL, String mailC) {
 		try {
 			Statement stmt = conn.createStatement();
 			int idPC;
-			if (a) {
-				PreparedStatement req = conn.prepareStatement("insert into Livre values (?,?,?,?,?)");
-				req.setInt(1, idA);
-				req.setString(2, preface);
-				req.setString(3, postface);
-				idPC = InterfaceClient.creerPhoto(idI,idA);
-				req.setInt(4, idPC);
-				req.setString(5, titreL);
-				req.executeQuery();
-
-				conn.commit();
-				System.out.println("Ajout du livre : REUSSI !!");
-			} else {
 
 				AjoutAlbum(mailC);
 				PreparedStatement req = conn.prepareStatement("select count(idAlbum) from Album");
@@ -147,9 +163,9 @@ public class InterfaceClient {
 
 				req1.executeQuery();
 				conn.commit();
-				System.out.println("Ajout d'un livre : REUSSI !!");
+				System.out.println("Ajout du livre : REUSSI !!");
 
-			}
+			
 
 		} catch (SQLException e) {
 			System.out.println("Pb dans BD : ROLLBACK !!");
@@ -162,6 +178,77 @@ public class InterfaceClient {
 			}
 		}
 	}
+	
+	public void AjoutCalendrier( String typeC, int idp, String mailC) {
+		
+		try {
+			Statement stmt = conn.createStatement();
+			int idPC;
+			
+
+				AjoutAlbum(mailC);
+				PreparedStatement req = conn.prepareStatement("select count(idAlbum) from Album");
+				ResultSet res = req.executeQuery();
+				int numAlbum = 0;
+				while (res.next())
+					numAlbum = res.getInt(1);
+			
+				PreparedStatement req1 = conn.prepareStatement("insert into Calendrier values (?,?,?)");
+				req1.setInt(1, numAlbum);
+				req1.setString(2, typeC);
+				idPC = InterfaceClient.creerPhoto(idp,numAlbum);
+				req1.setInt(3 , idPC);
+
+				req1.executeQuery();
+				conn.commit();
+				System.out.println("Ajout du calendrier : REUSSI !!");
+
+			
+
+		} catch (SQLException e) {
+			System.out.println("Pb dans BD : ROLLBACK !!");
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
+	
+	public void AjoutAgenda(String type, String mailC) {
+		// TODO Auto-generated method stub
+		try {
+			Statement stmt = conn.createStatement();
+			AjoutAlbum(mailC);
+			PreparedStatement req = conn.prepareStatement("select count(idAlbum) from Album");
+			ResultSet res = req.executeQuery();
+			int numAlbum = 0;
+			while (res.next())
+				numAlbum = res.getInt(1);
+			
+			PreparedStatement req1 = conn.prepareStatement("insert into Agenda values (?,?)");
+			req1.setInt(1, numAlbum);
+			req1.setString(2, type);
+				
+			req1.executeQuery();
+			res.close();
+			conn.commit();
+			System.out.println("Ajout d'un agenda : REUSSI !!");
+
+		} catch (SQLException e) {
+			System.out.println("Pb dans BD : ROLLBACK !!");
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
+
 	// Affiche la table pour un client : Image(idI, partagé, URL, #mailCLient,
 		// informationImage, résolution)
 
@@ -251,34 +338,25 @@ public class InterfaceClient {
 		return 0;
 	}
 
-	public Client connection(String mail, String motDePasse) {
-			try {
-				Statement stmt = conn.createStatement();
-				String nom, prenom, adresse,MDP = null;
-				PreparedStatement req = conn
-						.prepareStatement("select nom, prenom, adressePostal, MDP from Client where mailClient = ? ");
-				req.setString(1, mail);
-				ResultSet res = req.executeQuery();
-				while (res.next()) {
-					nom = res.getString(1);
-					prenom = res.getString(2);
-					adresse = res.getString(3);
-					MDP = res.getString(4);
-				
-					if(MDP.equals(motDePasse)){
-						return new Client(mail, nom, prenom, adresse, MDP);
-					}
-					else
-						return null;
-				}
-			} catch (SQLException e) {
-				System.out.println("Pb dans BD : ROLLBACK !!");
-				e.printStackTrace();
 
+
+	
+	
+
+	
+	
+	
+	//Client(mailClient, nom, prenom, adressePostal, MDP)
+	public void AfficheTousClients() {
+		try{
+		PreparedStatement req = conn.prepareStatement("select mailClient,nom,prenom,adressePostale,MDP from Client");
+		ResultSet res = req.executeQuery();
+		System.out.println("-- La liste des clients -- ");
+		System.out.println("mailClient | Nom | Prenom | Adresse Postale | MDP ");
+		
+		}catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 			}
-		
-		return null;
-		// TODO Auto-generated method stub
-		
+		}
 	}
-}

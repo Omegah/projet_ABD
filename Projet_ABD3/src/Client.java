@@ -12,14 +12,13 @@ public class Client {
 	public Client(InterfaceClient i) {
 		this.interfaceClient = i;
 	}
-	
 
 	public Client(String mail, String nom, String prenom, String adresse, String mDP) {
-this.mail = mail;
-this.nom=nom;
-this.prenom=prenom;
-this.motDePasse = mDP;
-this.adressePostal=adresse;
+		this.mail = mail;
+		this.nom = nom;
+		this.prenom = prenom;
+		this.motDePasse = mDP;
+		this.adressePostal = adresse;
 	}
 
 	public void inscription() {
@@ -84,21 +83,19 @@ this.adressePostal=adresse;
 
 		if (true) {
 			System.out.println("--- Ajout d'un album ---");
-			System.out.println("** 1- Creer un album normal ");
-			System.out.println("** 2- Creer un livre ");
-			System.out.println("** 3- Creer un calendrier ");
-			System.out.println("** 4- Creer un agenda ");
+			System.out.println("** 1- Creer un livre ");
+			System.out.println("** 2- Creer un calendrier ");
+			System.out.println("** 3- Creer un agenda ");
 			int choixA = LectureClavier.lireEntier("Votre choix ? ");
 			switch (choixA) {
 			case 1:
-				interfaceClient.AjoutAlbum(mail);
-				break;
-			case 2:
 				AjoutLivre();
 				break;
-			case 3:
+			case 2:
 				AjoutCalendrier();
 				break;
+			case 3:
+				AjoutAgenda();
 			default:
 				break;
 			}
@@ -106,101 +103,6 @@ this.adressePostal=adresse;
 	}
 
 	private void AjoutLivre() {
-		boolean a;
-		System.out.println(
-				"--- Creation d'un livre --- \n** 1- Creer un livre a partir un album existant \n** 2- Creer un nouveau livre \n");
-		int choixC = LectureClavier.lireEntier("Votre choix?");
-		switch (choixC) {
-		case 1:
-			ConvertALivre();
-			/*
-			 * a = true;
-			 * 
-			 * int idA = LectureClavier.lireEntier(
-			 * "choisissez un album de la liste suivante (IdA) : ");
-			 * interfaceClient.AfficheTousAlbum(mail);
-			 * 
-			 * System.out.println("Ecrire une preface pour le livre : "
-			 * ); System.out.flush(); String preface =
-			 * LectureClavier.lireChaine();
-			 * 
-			 * System.out.println("Ecrire une postface pour le livre : "
-			 * ); System.out.flush(); String postface =
-			 * LectureClavier.lireChaine();
-			 * 
-			 * int idI = LectureClavier.lireEntier(
-			 * "Choisir une image de couverture de la liste suivante : "
-			 * ); interfaceClient.AfficheTousImages(mail);
-			 * 
-			 * System.out.println("Donner un titre au livre : ");
-			 * System.out.flush(); String titreL =
-			 * LectureClavier.lireChaine();
-			 * 
-			 * interfaceClient.AjoutLivre(a, idA, preface, postface,
-			 * idI, titreL, mail);
-			 */
-			break;
-		case 2:
-			AjoutNouveauLivre();
-			/*
-			 * a = false; System.out.println(
-			 * "Ecrire une preface pour le livre : ");
-			 * System.out.flush(); String preface1 =
-			 * LectureClavier.lireChaine();
-			 * 
-			 * System.out.println("Ecrire une postface pour le livre : "
-			 * ); System.out.flush(); String postface1 =
-			 * LectureClavier.lireChaine();
-			 * 
-			 * int idI1 = LectureClavier.lireEntier(
-			 * "Choisir une image de couverture de la liste suivante : "
-			 * ); interfaceClient.AfficheTousImages(mail);
-			 * 
-			 * System.out.println("Donner un titre au livre : ");
-			 * System.out.flush(); String titreL1 =
-			 * LectureClavier.lireChaine();
-			 * 
-			 * interfaceClient.AjoutLivre(a, 0, preface1, postface1,
-			 * idI1, titreL1, mail);
-			 */
-			break;
-		default:
-			break;
-		}
-
-		
-	}
-	private void AjoutCalendrier() {
-		boolean a;
-		System.out.println(
-				"--- Creation d'un Calendrier --- \n** 1- Creer un calendrier a partir un album existant \n** 2- Creer un nouveau calendrier \n");
-		int choixC = LectureClavier.lireEntier("Votre choix?");
-		switch (choixC) {
-		case 1 :
-			AjoutNouveauCalendrier();
-			break;
-		case 2 :
-			ConvertACalendrier();
-			break;
-		default:
-			break;
-		}
-		
-	}
-	private void ConvertACalendrier() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private void AjoutNouveauCalendrier() {
-		// TODO Auto-generated method stub
-		
-	}
-	// Ajout d'un nouveau livre (Creer le livre sans referencer a un album
-	// existant) : Livre(#idAlbum, préface, postface,
-	// #photoCouverture,titreLivre)
-	// idI prend la valeur de n'importe quoi
-	public void AjoutNouveauLivre() {
 		if (true) {
 			System.out.println("--- Ajout d'un livre ---");
 			System.out.println("Donner la preface du livre : ");
@@ -218,37 +120,46 @@ this.adressePostal=adresse;
 			System.out.flush();
 			String titreL = LectureClavier.lireChaine();
 
-			interfaceClient.AjoutLivre(false, 0, preface, postface, idI, titreL, mail);
+			interfaceClient.AjoutLivre(preface, postface, idI, titreL, mail);
 		}
+
 	}
 
-	// transformation d'un album normal en livre
-	public void ConvertALivre() {
+	public void AjoutAgenda() {
 		if (true) {
-			System.out.println("--- Ajout d'un livre apartir d'un album existant ---");
-			interfaceClient.AfficheTousAlbum(mail);
-
-			int idI = LectureClavier.lireEntier("Choisir un album de la liste precedente : ");
-
-			System.out.println("Donner la preface du livre : ");
-			System.out.flush();
-			String preface = LectureClavier.lireChaine();
-
-			System.out.println("Donner la postface du livre : ");
-			System.out.flush();
-			String postface = LectureClavier.lireChaine();
-
-			interfaceClient.AfficheTousImages(mail);
-			int idp = LectureClavier.lireEntier("choisit une photo pour la couverture (Donner l'id ) :");
-
-			System.out.println("Donner le titre du livre : ");
-			System.out.flush();
-			String titreL = LectureClavier.lireChaine();
-
-			interfaceClient.AjoutLivre(true, idI, preface, postface, idp, titreL, mail);
+			System.out.println("--- Ajout d'un livre ---");
+			System.out.println("**** Type d'agenda ***");
+			System.out.println("** 1- Journalier (365 pages)");
+			System.out.println("** 2- Hebdomadaire (56 pages)");
+			System.out.println("**********************");
+			int choix = LectureClavier.lireEntier("Choisir le type d'agenda : ");
+			
+			if(choix == 1)
+				interfaceClient.AjoutAgenda("Journalier", mail);
+			else if(choix ==2)				
+				interfaceClient.AjoutAgenda("Hebdomadaire", mail);
 		}
+	}
+	
+	private void AjoutCalendrier() {
+		String typeC;
+		System.out.println(
+
+				"--- Creation d'un Calendrier --- \n** 1- Creer un calendrier a partir un album existant \n** 2- Creer un nouveau calendrier \n");
+
+		int type = LectureClavier.lireEntier("Donner le type du calendrier  : \n1- bureau\n2-mural ");
+		if(type==1)typeC="bureau";else typeC="mural";
+
+		interfaceClient.AfficheTousImages(mail);
+		int idp = LectureClavier.lireEntier("choisit une photo pour la couverture (Donner l'id ) :");
+
+		
+
+		interfaceClient.AjoutCalendrier(typeC, idp,mail);
+
 
 	}
+
 
 	public String getNom() {
 		return nom;

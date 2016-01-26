@@ -50,6 +50,9 @@ public class Connexionsgbd {
 						client = interfaceClient.connection(mailC, mdp);
 					case 3 :
 						//Creation admin avec interface client ?
+					case 4 : 
+						//Affichage de tous les clients 
+						interfaceClient.AfficheTousClients();
 					default:
 						break;
 					}
