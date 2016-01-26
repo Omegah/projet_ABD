@@ -12,10 +12,15 @@ public class Client {
 	public Client(InterfaceClient i) {
 		this.interfaceClient = i;
 	}
-	/*
-	 * public Client(String mail2, String nom2, String prenom2, String adresse,
-	 * String mDP) { // TODO Auto-generated constructor stub }
-	 */
+	
+
+	public Client(String mail, String nom, String prenom, String adresse, String mDP) {
+this.mail = mail;
+this.nom=nom;
+this.prenom=prenom;
+this.motDePasse = mDP;
+this.adressePostal=adresse;
+	}
 
 	public void inscription() {
 		String tempNom, tempPrenom, tempMail, tempAdresse, tempMotdepasse;

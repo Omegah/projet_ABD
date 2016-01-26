@@ -266,7 +266,7 @@ public class InterfaceClient {
 					MDP = res.getString(4);
 				
 					if(MDP.equals(motDePasse)){
-						//return new Client(mail, nom, prenom, adresse, MDP);
+						return new Client(mail, nom, prenom, adresse, MDP);
 					}
 					else
 						return null;
