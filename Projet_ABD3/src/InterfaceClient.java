@@ -216,6 +216,39 @@ public class InterfaceClient {
 			}
 		}
 	}
+	
+	public void AjoutAgenda(String type, String mailC) {
+		// TODO Auto-generated method stub
+		try {
+			Statement stmt = conn.createStatement();
+			AjoutAlbum(mailC);
+			PreparedStatement req = conn.prepareStatement("select count(idAlbum) from Album");
+			ResultSet res = req.executeQuery();
+			int numAlbum = 0;
+			while (res.next())
+				numAlbum = res.getInt(1);
+			
+			PreparedStatement req1 = conn.prepareStatement("insert into Agenda values (?,?)");
+			req1.setInt(1, numAlbum);
+			req1.setString(2, type);
+				
+			req1.executeQuery();
+			res.close();
+			conn.commit();
+			System.out.println("Ajout d'un agenda : REUSSI !!");
+
+		} catch (SQLException e) {
+			System.out.println("Pb dans BD : ROLLBACK !!");
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
+
 	// Affiche la table pour un client : Image(idI, partagé, URL, #mailCLient,
 		// informationImage, résolution)
 
@@ -305,6 +338,11 @@ public class InterfaceClient {
 		return 0;
 	}
 
+
+
+	
+	
+
 	
 	
 	
@@ -319,6 +357,6 @@ public class InterfaceClient {
 		}catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+			}
 		}
 	}
-}

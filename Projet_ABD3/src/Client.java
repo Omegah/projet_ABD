@@ -83,21 +83,19 @@ public class Client {
 
 		if (true) {
 			System.out.println("--- Ajout d'un album ---");
-			System.out.println("** 1- Creer un album normal ");
-			System.out.println("** 2- Creer un livre ");
-			System.out.println("** 3- Creer un calendrier ");
-			System.out.println("** 4- Creer un agenda ");
+			System.out.println("** 1- Creer un livre ");
+			System.out.println("** 2- Creer un calendrier ");
+			System.out.println("** 3- Creer un agenda ");
 			int choixA = LectureClavier.lireEntier("Votre choix ? ");
 			switch (choixA) {
 			case 1:
-				interfaceClient.AjoutAlbum(mail);
-				break;
-			case 2:
 				AjoutLivre();
 				break;
-			case 3:
+			case 2:
 				AjoutCalendrier();
 				break;
+			case 3:
+				AjoutAgenda();
 			default:
 				break;
 			}
@@ -127,9 +125,26 @@ public class Client {
 
 	}
 
+	public void AjoutAgenda() {
+		if (true) {
+			System.out.println("--- Ajout d'un livre ---");
+			System.out.println("**** Type d'agenda ***");
+			System.out.println("** 1- Journalier (365 pages)");
+			System.out.println("** 2- Hebdomadaire (56 pages)");
+			System.out.println("**********************");
+			int choix = LectureClavier.lireEntier("Choisir le type d'agenda : ");
+			
+			if(choix == 1)
+				interfaceClient.AjoutAgenda("Journalier", mail);
+			else if(choix ==2)				
+				interfaceClient.AjoutAgenda("Hebdomadaire", mail);
+		}
+	}
+	
 	private void AjoutCalendrier() {
 		String typeC;
 		System.out.println(
+
 				"--- Creation d'un Calendrier --- \n** 1- Creer un calendrier a partir un album existant \n** 2- Creer un nouveau calendrier \n");
 
 		int type = LectureClavier.lireEntier("Donner le type du calendrier  : \n1- bureau\n2-mural ");
@@ -142,11 +157,9 @@ public class Client {
 
 		interfaceClient.AjoutCalendrier(typeC, idp,mail);
 
+
 	}
 
-
-
-	
 
 	public String getNom() {
 		return nom;
