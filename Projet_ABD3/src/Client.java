@@ -147,9 +147,7 @@ public class Client {
 	
 	private void AjoutCalendrier() {
 		String typeC;
-		System.out.println(
-
-				"--- Creation d'un Calendrier --- \n** 1- Creer un calendrier a partir un album existant \n** 2- Creer un nouveau calendrier \n");
+		System.out.println(	"--- Creation d'un Calendrier --- \n** 1- Creer un calendrier a partir un album existant \n** 2- Creer un nouveau calendrier \n");
 
 		int type = LectureClavier.lireEntier("Donner le type du calendrier  : \n1- bureau\n2-mural ");
 		if(type==1)typeC="bureau";else typeC="mural";
@@ -157,11 +155,12 @@ public class Client {
 		interfaceClient.AfficheTousImages(mail);
 		int idp = LectureClavier.lireEntier("choisit une photo pour la couverture (Donner l'id ) :");
 
-		
-
 		interfaceClient.AjoutCalendrier(typeC, idp,mail);
-
-
+	}
+	
+	public void CreationCommande(){
+		System.out.println("************ Creation d'une commande ! **************");
+		interfaceClient.CreationCommande(mail);
 	}
 
 

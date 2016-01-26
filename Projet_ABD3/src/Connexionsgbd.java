@@ -13,7 +13,7 @@ public class Connexionsgbd {
 		try {
 			int choix = 0;
 			//Variable pour savoir si on se connecte en tant qu'administrateur admin = 1 si on est admin 
-			int admin = 1;
+			int admin = 0;
 			String jdbcDriver, dbUrl, username, password;
 			DatabaseAccessProperties dap = new DatabaseAccessProperties(configurationFile);
 			
@@ -76,6 +76,8 @@ public class Connexionsgbd {
 					case 5 : 
 						
 						break;
+					case 7 :
+							client.CreationCommande();
 					default:
 						break;
 					}

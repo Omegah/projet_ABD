@@ -352,4 +352,37 @@ public class InterfaceClient {
 			e1.printStackTrace();
 			}
 		}
+
+	public void CreationCommande(String mail) {
+		// TODO Auto-generated method stub
+		try {
+			Statement stmt = conn.createStatement();
+
+			PreparedStatement req = conn.prepareStatement("select count(idCom) from Commande");
+			ResultSet res = req.executeQuery();
+			int numCommande = 0;
+			while (res.next())
+				numCommande = res.getInt(1);
+
+			System.out.println("il y a " + numCommande + " commandes sur la base de donnï¿½es");
+			PreparedStatement st = conn.prepareStatement("insert into Album values (?,?,?,?)");
+			st.setInt(1, numCommande + 1);
+			st.setString(2, mail);
+			st.setInt(3, 0);
+			st.setString(4, "en Création");
+
+			st.executeQuery();
+			conn.commit();
+			System.out.println("Ajout d'une commande : REUSSI !! ");
+		} catch (SQLException e) {
+			System.out.println("Pb dans BD : ROLLBACK !!");
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
 	}
