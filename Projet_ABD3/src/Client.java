@@ -170,6 +170,15 @@ public class Client {
 		interfaceClient.creerPhoto(idp, idA);
 		
 	};
+	
+public void PartageImage() {
+	System.out.println("--- Partage d'une image ---");	
+	System.out.println("Choisir un image de la liste suivante : ");
+	interfaceClient.AfficheTousImages(mail);
+	int idI = LectureClavier.lireEntier("Votre choix ?");
+	
+	interfaceClient.PartageImage(idI);
+	}
 	public String getNom() {
 		return nom;
 	}
@@ -206,6 +215,8 @@ public class Client {
 	public void deconnecter() {
 connectee = false;		
 	}
+
+	
 
 	
 
