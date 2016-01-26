@@ -42,11 +42,11 @@ public class InterfaceClient {
 		return false;
 	}
 	public Client connection(String mail, String motDePasse) {
-		try {
+		try{
 			Statement stmt = conn.createStatement();
-			String nom, prenom, adresse,MDP = null;
+			String nom = null, prenom = null, adresse = null,MDP = null;
 			PreparedStatement req = conn
-					.prepareStatement("select nom, prenom, adressePostal, MDP from Client where mailClient = ? ");
+					.prepareStatement("select nom, prenom, adressePostale, MDP from Client where mailClient = ? ");
 			req.setString(1, mail);
 			ResultSet res = req.executeQuery();
 			while (res.next()) {
@@ -54,20 +54,21 @@ public class InterfaceClient {
 				prenom = res.getString(2);
 				adresse = res.getString(3);
 				MDP = res.getString(4);
-			
-				if(MDP.equals(motDePasse)){
-					return new Client(mail, nom, prenom, adresse, MDP);
-				}
-				else
-					return null;
 			}
-		} catch (SQLException e) {
+				if(MDP.equals(motDePasse)){
+					System.out.println("CONNECTED !");
+					return new Client(true,mail, nom, prenom, adresse, MDP,this);
+				}
+		}catch (SQLException e) {
 			System.out.println("Pb dans BD : ROLLBACK !!");
 			e.printStackTrace();
-
+			
 		}
+			
+			return null;
 	
-	return null;
+	
+	
 	
 }
 
@@ -297,7 +298,7 @@ public class InterfaceClient {
 
 	public static int creerPhoto(int idI,int idAlbum) {
 		try {
-			
+			System.out.println("Information de la photo ");
 			System.out.println("Donner un titre a la photo choisie : ");
 			System.out.flush();
 			String titreP = LectureClavier.lireChaine();
@@ -349,11 +350,19 @@ public class InterfaceClient {
 	//Client(mailClient, nom, prenom, adressePostal, MDP)
 	public void AfficheTousClients() {
 		try{
+		String mail,nom,prenom,adP,MDP;
 		PreparedStatement req = conn.prepareStatement("select mailClient,nom,prenom,adressePostale,MDP from Client");
 		ResultSet res = req.executeQuery();
 		System.out.println("-- La liste des clients -- ");
 		System.out.println("mailClient | Nom | Prenom | Adresse Postale | MDP ");
-		
+		while (res.next()){
+			mail = res.getString(1);
+			nom = res.getString(2);
+			prenom = res.getString(3);
+			adP = res.getString(4);
+			MDP = res.getString(5);
+			System.out.println(mail+" | "+nom+" | "+prenom+" | "+ adP +" | "+ MDP);
+		}
 		}catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
