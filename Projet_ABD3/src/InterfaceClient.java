@@ -147,7 +147,7 @@ public class InterfaceClient {
 
 				req1.executeQuery();
 				conn.commit();
-				System.out.println("Ajout d'un livre : REUSSI !!");
+				System.out.println("Ajout du livre : REUSSI !!");
 
 			}
 
@@ -278,6 +278,59 @@ public class InterfaceClient {
 			}
 		
 		return null;
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void AjoutCalendrier(boolean a, String typeC, int idA, int idp, String mailC) {
+	
+		try {
+			Statement stmt = conn.createStatement();
+			int idPC;
+			if (a) {
+				PreparedStatement req = conn.prepareStatement("insert into Calendrier values (?,?,?)");
+				req.setInt(1, idA);
+				req.setString(2, typeC);
+				idPC = InterfaceClient.creerPhoto(idp,idA);
+				req.setInt(3, idPC);
+				req.executeQuery();
+
+				conn.commit();
+				System.out.println("Ajout du calendrier : REUSSI !!");
+			} else {
+
+				AjoutAlbum(mailC);
+				PreparedStatement req = conn.prepareStatement("select count(idAlbum) from Album");
+				ResultSet res = req.executeQuery();
+				int numAlbum = 0;
+				while (res.next())
+					numAlbum = res.getInt(1);
+			
+				PreparedStatement req1 = conn.prepareStatement("insert into Calendrier values (?,?,?)");
+				req1.setInt(1, numAlbum);
+				req1.setString(2, typeC);
+				idPC = InterfaceClient.creerPhoto(idp,numAlbum);
+				req1.setInt(3 , idPC);
+
+				req1.executeQuery();
+				conn.commit();
+				System.out.println("Ajout du calendrier : REUSSI !!");
+
+			}
+
+		} catch (SQLException e) {
+			System.out.println("Pb dans BD : ROLLBACK !!");
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
+
+	public void AfficheTousClients() {
 		// TODO Auto-generated method stub
 		
 	}
