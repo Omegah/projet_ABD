@@ -29,8 +29,14 @@ public class Menu {
 		System.out.println("** 1- Afficher les prestataires");
 		System.out.println("** 2- Ajouter un prestataire");
 		System.out.println("** 3- Supprimer un prestataire");
-		System.out.println("** 4- Afficher les commandes");
-		System.out.println("** 9- Deconnecter");
+		System.out.println("** 4- Afficher les dispositifs/formats");
+		System.out.println("** 5- Ajouter un dispositif pour un prestataire");
+		System.out.println("** 6- Supprimer un dispositif pour un prestataire");
+		System.out.println("** 7- Ajouter un format pour un dispositif");
+		System.out.println("** 8- Ajouter un format pour un prestataire");
+
+		System.out.println("** 9- Afficher les commandes");
+		System.out.println("** 10- Deconnecter");
 		System.out.println("** 99- Quitter l'application");
 		System.out.println("***********************************************");
 	}
