@@ -336,14 +336,7 @@ public class InterfaceClient {
 			}
 		}
 		return 0;
-	}
-
-
-
-	
-	
-
-	
+	i}
 	
 	
 	//Client(mailClient, nom, prenom, adressePostal, MDP)

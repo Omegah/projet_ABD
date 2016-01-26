@@ -49,6 +49,7 @@ public class Connexionsgbd {
 					case 4 : 
 						//Affichage de tous les clients 
 						interfaceClient.AfficheTousClients();
+						break;
 					default:
 						break;
 					}
@@ -67,6 +68,10 @@ public class Connexionsgbd {
 						break;
 					case 4 :
 						client.AjoutAlbum();
+						break;
+					case 5 : 
+						
+						break;
 					default:
 						break;
 					}
