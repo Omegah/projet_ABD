@@ -42,7 +42,9 @@ public class InterfaceGestion {
 		PreparedStatement req = conn.prepareStatement("select idS from societe where nomSociete=?");
 		req.setString(1,societe);
 		ResultSet res = req.executeQuery();
+		res.next();
 		int idS = res.getInt(1);
+		req.close();
 		
 		int idD = Utils.getLastId("dispositif","idD",conn);
 		
@@ -51,46 +53,65 @@ public class InterfaceGestion {
 		st.setInt(2, idS);
 		
 		st.executeQuery();
+		conn.commit();
+		System.out.println("Dispositif" + idD + "  ajouté pour la société "+societe);
+		
 		return false;
 	}
 	
-	public boolean AjoutFormatSociete(int idD,int stock,int prixU,int tirageJour,String societe) throws SQLException {
+	public boolean AjoutFormatSociete(int idD,int idF,int stock,float prixU,int tirageJour,String societe) throws SQLException {
 		
 		PreparedStatement req = conn.prepareStatement("select idS from societe where nomSociete=?");
 		req.setString(1,societe);
 		ResultSet res = req.executeQuery();
+		res.next();
 		int idS = res.getInt(1);
+		req.close();
+				
+		PreparedStatement st2 = conn.prepareStatement("insert into DispositifFormat values (?,?)");
+		st2.setInt(1, idD);
+		st2.setInt(2, idF);
+		st2.executeQuery();
 		
-		int idF = Utils.getLastId("FormatSociete","idF",conn);
+		conn.commit();
 		
 		PreparedStatement st = conn.prepareStatement("insert into FormatSociete values (?,?,?,?,?)");
 		st.setInt(1, idS);
 		st.setInt(2, idF);
 		st.setInt(3, stock);
-		st.setInt(4, prixU);
+		st.setFloat(4, prixU);
 		st.setInt(5, tirageJour);
 		st.executeQuery();
 		
-
-		PreparedStatement st2 = conn.prepareStatement("insert into DispositifFormat values (?,?)");
-		st.setInt(1, idD);
-		st.setInt(2, idF);
-		st.executeQuery();
+		conn.commit();
+		
 		return false;
 	}
+	
+	 public void ajouterFormat(String taille,int nbPixel,String libelle) throws SQLException {
 
-	 public void supprimerDispositif(int idD,String societe) throws SQLException {
+			int idF = Utils.getLastId("FormatSociete","idF",conn);
+			
+			PreparedStatement st2 = conn.prepareStatement("insert into Format values (?,?,?,?)");
+			st2.setInt(1, idF);
+			st2.setString(2, taille);
+			st2.setInt(3, nbPixel);
+			st2.setString(4, libelle);
+
+			st2.executeQuery();
+			
+			conn.commit();
+			
+			System.out.println("Format" + idF + "  ajouté ");
+
 		 
-		 	PreparedStatement req0 = conn.prepareStatement("select idS from societe where nomSociete=?");
-			req0.setString(1,societe);
-			ResultSet res0 = req0.executeQuery();
-			res0.next();
-			int idS = res0.getInt(1);
-			req0.close();
+	 }
+
+	 public void supprimerDispositif(int idD) throws SQLException {
 		 
-		 PreparedStatement req = conn.prepareStatement("select idF from FormatSociete natural join DispositifFormat where idD=? and idS=?");
+		 
+		 PreparedStatement req = conn.prepareStatement("select idF from FormatSociete natural join DispositifFormat where idD=?");
 			req.setInt(1,idD);
-			req.setInt(2,idS);
 			ResultSet res = req.executeQuery();
 			
 			
@@ -108,7 +129,10 @@ public class InterfaceGestion {
 			PreparedStatement req4 = conn.prepareStatement("delete from dispositif where idD=?");
 			req4.setInt(1, idD);
 			req4.executeQuery();
+			conn.commit();
 			
+			System.out.println("Dispositif" + idD + "  supprimé");
+
 			/*
 			 * Trigger : verifier si dernier dispositif a faire un format pour une societe
 			 */
@@ -160,9 +184,6 @@ public class InterfaceGestion {
 			req2.setInt(1, idS);
 			ResultSet rs = req2.executeQuery();
 
-			System.out.println("P2");
-
-
 			if (!rs.isBeforeFirst())
 				System.out.println("pas de formats pour cette société.");
 			else{
@@ -173,7 +194,6 @@ public class InterfaceGestion {
 			while (rs.next()) {
 				System.out.println(rs.getString(2) + " : "+ rs.getString(3)+ ""+ " : "+ rs.getString(4)+ ""+ " : "+ rs.getString(5)+ "");
 			}
-			System.out.println("P3");
 
 			rs.close();
 			req2.close();
