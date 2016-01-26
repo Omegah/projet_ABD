@@ -1,5 +1,8 @@
 
 import java.util.Scanner;
+
+import Interactions.InterfaceGestion;
+
 import java.io.*;
 import java.sql.*;
 
@@ -10,8 +13,10 @@ public class Connexionsgbd {
 		try {
 			int choix = 0;
 			//Variable pour savoir si on se connecte en tant qu'administrateur admin = 1 si on est admin 
+
 			int admin = 0;
 			int i =0;
+
 			String jdbcDriver, dbUrl, username, password;
 			DatabaseAccessProperties dap = new DatabaseAccessProperties(configurationFile);
 			
@@ -25,12 +30,13 @@ public class Connexionsgbd {
 			Connection conn = DriverManager.getConnection(dbUrl, username, password);
 			conn.setAutoCommit(false);
 			
+			InterfaceGestion interfaceGestion = new InterfaceGestion(conn);
 			InterfaceClient interfaceClient = new InterfaceClient(conn);
 			Client client = new Client(interfaceClient);
 			//System.out.println("Vous etes connect�");
 			
 			do {
-				if(!client.isConnected()){
+				if(!client.isConnected() && admin == 0){
 					Menu.Acceuil();
 					choix = LectureClavier.lireEntier("votre choix ? ");
 					switch (choix) {
@@ -79,15 +85,63 @@ public class Connexionsgbd {
 					case 4 :
 						client.AjoutAlbum();
 						break;
+
 					case 5 :
 						client.AjoutPhotoAlbum();
 						break;
 					case 99 :
 						client.deconnecter();
-						break;
+
 					default:
 						break;
 					}
+				}
+				else if(!client.isConnected() && admin == 1){
+					Menu.Administrateur();
+					choix = LectureClavier.lireEntier("votre choix ? ");
+					switch(choix){
+					case 1 : 
+						interfaceGestion.AfficherPrestataires();
+						break;
+					case 2 :
+						String nom,adresse;
+						int delai,pref;
+						System.out.println("Renseignez le nom du prestataire : ");
+						nom = LectureClavier.lireChaine();
+						System.out.println("Renseignez l'adresse du prestataire :");
+						adresse = LectureClavier.lireChaine();
+						pref =LectureClavier.lireEntier("Renseignez la qualité du prestataire :");
+						delai =LectureClavier.lireEntier("Renseignez le déla maximum du prestataire :");
+						interfaceGestion.AjoutPrestataire(nom, adresse, pref, delai);
+						break;
+					case 3 : 
+						String nom2;
+						System.out.println("Renseignez le nom du prestataire a supprimer : ");
+						nom2 = LectureClavier.lireChaine();
+						interfaceGestion.supprimerPrestataire(nom2);;
+						break;
+					case 4 :
+						String nom3;
+						System.out.println("Renseignez le nom du prestataire : ");
+						nom3 = LectureClavier.lireChaine();
+						interfaceGestion.AfficherDispositifsFormats(nom3);
+						break;
+					case 5 : 
+						String nom4;
+						System.out.println("Renseignez le nom du prestataire: ");
+						nom4 = LectureClavier.lireChaine();
+						interfaceGestion.AfficherDispositifsFormats(nom4);
+						break;
+					case 6 : 
+						String nom5;
+						System.out.println("Renseignez le nom du prestataire: ");
+						nom5 = LectureClavier.lireChaine();
+						int idD = LectureClavier.lireEntier("Renseignez l'id du dispositif a supprimer : ");
+						interfaceGestion.supprimerDispositif(idD, nom5);
+						break;
+					default:
+						break;
+				}
 				}
 				
 			} while (choix != 999);

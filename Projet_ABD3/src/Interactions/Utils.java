@@ -12,9 +12,14 @@ public class Utils {
 		
 		Statement stmt = conn.createStatement();
 		ResultSet rs = stmt.executeQuery("SELECT MAX("+ id +")	FROM "+table);
-
-			return rs.getInt(1);
+		//System.out.println("PO1" + rs.getInt(1));
+		rs.next();
+		int res = rs.getInt(1);
+		rs.close();
+		stmt.close();
 		
+		return res+1;
+	
 	}
 
 	public static void updateTable(String table,String attribut, String valeur,String condition, String valeurCondition,Connection conn) throws SQLException {

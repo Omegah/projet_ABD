@@ -78,18 +78,22 @@ public class Client {
 
 		if (true) {
 			System.out.println("--- Ajout d'un album ---");
-			System.out.println("** 1- Creer un livre ");
-			System.out.println("** 2- Creer un calendrier ");
-			System.out.println("** 3- Creer un agenda ");
+			System.out.println("** 1- Creer un album ");
+			System.out.println("** 2- Creer un livre ");
+			System.out.println("** 3- Creer un calendrier ");
+			System.out.println("** 4- Creer un agenda ");
 			int choixA = LectureClavier.lireEntier("Votre choix ? ");
 			switch (choixA) {
 			case 1:
-				AjoutLivre();
+				AjoutAlbum();
 				break;
 			case 2:
-				AjoutCalendrier();
+				AjoutLivre();
 				break;
 			case 3:
+				AjoutCalendrier();
+				break;
+			case 4:
 				AjoutAgenda();
 			default:
 				break;

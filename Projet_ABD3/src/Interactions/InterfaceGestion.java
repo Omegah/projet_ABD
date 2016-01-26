@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Scanner;
 
 import javax.swing.JLabel;
 
@@ -17,19 +18,20 @@ public class InterfaceGestion {
 		InterfaceGestion.conn = conn;
 	}
 	
-	public void CreationPrestataire(String nomS,String adresse,int pref,int delai) throws SQLException{
+	public void AjoutPrestataire(String nomS,String adresse,int pref,int delai) throws SQLException{
 		
-		Statement stmt = conn.createStatement();
 		
 		PreparedStatement st = conn.prepareStatement("insert into Societe values (?,?,?,?,?)");
-		
+		System.out.println("PO0");
+
 		st.setInt(1, Utils.getLastId("Societe","idS",conn));
 		st.setString(2, nomS);
 		st.setString(3, adresse);
 		st.setInt(4, pref);
 		st.setInt(5, delai);	
 		st.executeQuery();
-		System.out.println("Ajout prestataire");
+		conn.commit();
+		System.out.println("prestataire "+nomS+" ajouté.");
 		
 	}
 	
@@ -37,7 +39,7 @@ public class InterfaceGestion {
 
 	public boolean AjoutDispositif(String societe) throws SQLException {
 		
-		PreparedStatement req = conn.prepareStatement("select idS from societe where nameSociete=?");
+		PreparedStatement req = conn.prepareStatement("select idS from societe where nomSociete=?");
 		req.setString(1,societe);
 		ResultSet res = req.executeQuery();
 		int idS = res.getInt(1);
@@ -54,7 +56,7 @@ public class InterfaceGestion {
 	
 	public boolean AjoutFormatSociete(int idD,int stock,int prixU,int tirageJour,String societe) throws SQLException {
 		
-		PreparedStatement req = conn.prepareStatement("select idS from societe where nameSociete=?");
+		PreparedStatement req = conn.prepareStatement("select idS from societe where nomSociete=?");
 		req.setString(1,societe);
 		ResultSet res = req.executeQuery();
 		int idS = res.getInt(1);
@@ -77,9 +79,18 @@ public class InterfaceGestion {
 		return false;
 	}
 
-	 public void supprimerDispositif(int idD) throws SQLException {
-		 PreparedStatement req = conn.prepareStatement("select idF from FormatSociete natural join DispositifFormat where idD=?");
+	 public void supprimerDispositif(int idD,String societe) throws SQLException {
+		 
+		 	PreparedStatement req0 = conn.prepareStatement("select idS from societe where nomSociete=?");
+			req0.setString(1,societe);
+			ResultSet res0 = req0.executeQuery();
+			res0.next();
+			int idS = res0.getInt(1);
+			req0.close();
+		 
+		 PreparedStatement req = conn.prepareStatement("select idF from FormatSociete natural join DispositifFormat where idD=? and idS=?");
 			req.setInt(1,idD);
+			req.setInt(2,idS);
 			ResultSet res = req.executeQuery();
 			
 			
@@ -120,4 +131,51 @@ public class InterfaceGestion {
 		  */	 
 	 }
 	 
+	 public void AfficherPrestataires() throws SQLException {
+
+			Statement stmt = conn.createStatement();
+
+			ResultSet rs = stmt.executeQuery("SELECT nomSociete,preference FROM Societe");
+			System.out.println("Societe | preference\n");
+
+			if (!rs.isBeforeFirst())
+				System.out.println("pas de prestataire dans la base.");
+			while (rs.next()) {
+				System.out.println(rs.getString(1) + " : "+ rs.getString(2)+ "");
+			}
+			rs.close();
+			stmt.close();
+	 }
+	 
+	 public void AfficherDispositifsFormats(String societe) throws SQLException {
+		 
+		 	PreparedStatement req = conn.prepareStatement("select idS from societe where nomSociete=?");
+			req.setString(1,societe);
+			ResultSet res = req.executeQuery();
+			res.next();
+			int idS = res.getInt(1);
+			req.close();
+
+			PreparedStatement req2 = conn.prepareStatement("SELECT idS,idD,taille,nbPixel,libelle FROM FormatSociete NATURAL JOIN format NATURAL JOIN DispositifFormat WHERE idS=?");
+			req2.setInt(1, idS);
+			ResultSet rs = req2.executeQuery();
+
+			System.out.println("P2");
+
+
+			if (!rs.isBeforeFirst())
+				System.out.println("pas de formats pour cette société.");
+			else{
+				System.out.println("Dispositifs et formats de la société : "+ societe);
+				System.out.println("Dispositifs / taille / nb Pixel / libellé");
+			}
+
+			while (rs.next()) {
+				System.out.println(rs.getString(2) + " : "+ rs.getString(3)+ ""+ " : "+ rs.getString(4)+ ""+ " : "+ rs.getString(5)+ "");
+			}
+			System.out.println("P3");
+
+			rs.close();
+			req2.close();
+	 }
 }
