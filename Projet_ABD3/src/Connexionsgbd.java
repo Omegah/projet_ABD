@@ -13,7 +13,10 @@ public class Connexionsgbd {
 		try {
 			int choix = 0;
 			//Variable pour savoir si on se connecte en tant qu'administrateur admin = 1 si on est admin 
+
 			int admin = 0;
+			int i =0;
+
 			String jdbcDriver, dbUrl, username, password;
 			DatabaseAccessProperties dap = new DatabaseAccessProperties(configurationFile);
 			
@@ -48,8 +51,17 @@ public class Connexionsgbd {
 						System.out.println("Donner le mot de passe : ");
 						mdp = LectureClavier.lireChaine();
 						client = interfaceClient.connection(mailC, mdp);
+						
+						while(client==null && i<3){
+							System.out.println("Probleme de connexion recommencez \nDonner le mot de passe : ");
+							mdp = LectureClavier.lireChaine();
+							client = interfaceClient.connection(mailC, mdp);
+							i++;
+						}
+						break;
 					case 3 :
 						//Creation admin avec interface client ?
+						break;
 					case 4 : 
 						//Affichage de tous les clients 
 						interfaceClient.AfficheTousClients();
@@ -73,11 +85,19 @@ public class Connexionsgbd {
 					case 4 :
 						client.AjoutAlbum();
 						break;
-					case 5 : 
-						
+
+					case 5 :
+						client.AjoutPhotoAlbum();
 						break;
 					case 7 :
 							client.CreationCommande();
+							break;
+							
+					case 8 :
+							client.AjouterLot();
+					case 99 :
+						client.deconnecter();
+						break;
 					default:
 						break;
 					}
@@ -130,7 +150,7 @@ public class Connexionsgbd {
 				}
 				}
 				
-			} while (choix != 99);
+			} while (choix != 999);
 
 			// interfaceClient.CreationClient(client);
 			// client.AjoutImage(interfaceClient);

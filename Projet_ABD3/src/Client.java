@@ -13,12 +13,14 @@ public class Client {
 		this.interfaceClient = i;
 	}
 
-	public Client(String mail, String nom, String prenom, String adresse, String mDP) {
+	public Client(boolean connectee,String mail, String nom, String prenom, String adresse, String mDP,InterfaceClient i) {
+		this.connectee = connectee;
 		this.mail = mail;
 		this.nom = nom;
 		this.prenom = prenom;
 		this.motDePasse = mDP;
 		this.adressePostal = adresse;
+		this.interfaceClient = i;
 	}
 
 	public void inscription() {
@@ -52,14 +54,7 @@ public class Client {
 
 	}
 
-	// public void connection(){
-	// String mailC,mdp;
-	// System.out.println("Donner votre mail identifiant : ");
-	// mailC = LectureClavier.lireChaine();
-	// System.out.println("Donner le mot de passe : ");
-	// mdp = LectureClavier.lireChaine();
-	// interfaceClient.connection(mailC, mdp);
-	// }
+	
 
 	public void AjoutImage() {
 		int resolution;
@@ -147,7 +142,8 @@ public class Client {
 	
 	private void AjoutCalendrier() {
 		String typeC;
-		System.out.println(	"--- Creation d'un Calendrier --- \n** 1- Creer un calendrier a partir un album existant \n** 2- Creer un nouveau calendrier \n");
+
+		System.out.println("--- Creation d'un Calendrier ---");
 
 		int type = LectureClavier.lireEntier("Donner le type du calendrier  : \n1- bureau\n2-mural ");
 		if(type==1)typeC="bureau";else typeC="mural";
@@ -163,7 +159,19 @@ public class Client {
 		interfaceClient.CreationCommande(mail);
 	}
 
-
+	public void AjoutPhotoAlbum() {
+		System.out.println("--- Ajout d'un image dans un album ---");
+		System.out.println("Choisir un image de la liste suivante : ");
+		interfaceClient.AfficheTousImages(mail);
+		int idp = LectureClavier.lireEntier("Votre choix ?");
+		
+		System.out.println("Choisir un album de la liste : ");
+		interfaceClient.AfficheTousAlbum(mail);
+		int idA = LectureClavier.lireEntier("Votre choix ?");
+		
+		interfaceClient.creerPhoto(idp, idA);
+		
+	};
 	public String getNom() {
 		return nom;
 	}
@@ -195,6 +203,32 @@ public class Client {
 
 	public void AfficheTousAlbums() {
 		interfaceClient.AfficheTousAlbum(mail);
-	};
+	}
+
+	public void deconnecter() {
+connectee = false;		
+	}
+
+	public void AjouterLot() {
+		int idAlbum, idCom, quantite, idF, idS;
+		System.out.println("******* Ajout d'un lot à une commande *********");
+		AfficherTousCommande();
+		idCom = LectureClavier.lireEntier("CHoisir une commande (idCom) : ");
+		AfficheTousAlbums();
+		idAlbum = LectureClavier.lireEntier("Choisir un album (IdA):");
+		quantite = LectureClavier.lireEntier("Combien voulez vous de cet album ?");
+		interfaceClient.afficherTousFormat();
+		idF = LectureClavier.lireEntier("CHoisir le format de l'album : ");
+		
+		idS = interfaceClient.TrouverSociété(idF, quantite);
+		
+	}
+
+	private void AfficherTousCommande() {
+		// TODO Auto-generated method stub
+		interfaceClient.afficherTousCommande(mail);
+	}
+
+	
 
 }

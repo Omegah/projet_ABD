@@ -20,8 +20,11 @@ public class Menu {
 		System.out.println("** 5- Ajouter une photo a un album");
 		System.out.println("** 6- Afficher ses commandes");
 		System.out.println("** 7- Faire une commande");
-		System.out.println("** 9- Deconnecter");
-		System.out.println("** 99- Quitter l'application");
+		System.out.println("** 8- Ajouter un lot à une commande");
+		System.out.println("** 9- Partager un image");
+		System.out.println("** 10- Afficher les photos d'un album ");
+		System.out.println("** 99- Deconnecter");
+		System.out.println("** 999- Quitter l'application");
 		System.out.println("**********************************************");
 	}
 	

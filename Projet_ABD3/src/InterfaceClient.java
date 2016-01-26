@@ -42,11 +42,11 @@ public class InterfaceClient {
 		return false;
 	}
 	public Client connection(String mail, String motDePasse) {
-		try {
+		try{
 			Statement stmt = conn.createStatement();
-			String nom, prenom, adresse,MDP = null;
+			String nom = null, prenom = null, adresse = null,MDP = null;
 			PreparedStatement req = conn
-					.prepareStatement("select nom, prenom, adressePostal, MDP from Client where mailClient = ? ");
+					.prepareStatement("select nom, prenom, adressePostale, MDP from Client where mailClient = ? ");
 			req.setString(1, mail);
 			ResultSet res = req.executeQuery();
 			while (res.next()) {
@@ -54,20 +54,21 @@ public class InterfaceClient {
 				prenom = res.getString(2);
 				adresse = res.getString(3);
 				MDP = res.getString(4);
-			
-				if(MDP.equals(motDePasse)){
-					return new Client(mail, nom, prenom, adresse, MDP);
-				}
-				else
-					return null;
 			}
-		} catch (SQLException e) {
+				if(MDP.equals(motDePasse)){
+					System.out.println("CONNECTED !");
+					return new Client(true,mail, nom, prenom, adresse, MDP,this);
+				}
+		}catch (SQLException e) {
 			System.out.println("Pb dans BD : ROLLBACK !!");
 			e.printStackTrace();
-
+			
 		}
+			
+			return null;
 	
-	return null;
+	
+	
 	
 }
 
@@ -297,7 +298,7 @@ public class InterfaceClient {
 
 	public static int creerPhoto(int idI,int idAlbum) {
 		try {
-			
+			System.out.println("Information de la photo ");
 			System.out.println("Donner un titre a la photo choisie : ");
 			System.out.flush();
 			String titreP = LectureClavier.lireChaine();
@@ -342,11 +343,19 @@ public class InterfaceClient {
 	//Client(mailClient, nom, prenom, adressePostal, MDP)
 	public void AfficheTousClients() {
 		try{
+		String mail,nom,prenom,adP,MDP;
 		PreparedStatement req = conn.prepareStatement("select mailClient,nom,prenom,adressePostale,MDP from Client");
 		ResultSet res = req.executeQuery();
 		System.out.println("-- La liste des clients -- ");
 		System.out.println("mailClient | Nom | Prenom | Adresse Postale | MDP ");
-		
+		while (res.next()){
+			mail = res.getString(1);
+			nom = res.getString(2);
+			prenom = res.getString(3);
+			adP = res.getString(4);
+			MDP = res.getString(5);
+			System.out.println(mail+" | "+nom+" | "+prenom+" | "+ adP +" | "+ MDP);
+		}
 		}catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -365,7 +374,7 @@ public class InterfaceClient {
 				numCommande = res.getInt(1);
 
 			System.out.println("il y a " + numCommande + " commandes sur la base de donnï¿½es");
-			PreparedStatement st = conn.prepareStatement("insert into Album values (?,?,?,?)");
+			PreparedStatement st = conn.prepareStatement("insert into Commande values (?,?,?,?)");
 			st.setInt(1, numCommande + 1);
 			st.setString(2, mail);
 			st.setInt(3, 0);
@@ -385,4 +394,73 @@ public class InterfaceClient {
 			}
 		}
 	}
+
+	public void afficherTousCommande(String mail) {
+		// TODO Auto-generated method stub
+		try{
+			String mailCLient, statut;
+			int idCom, prixTotal;
+			PreparedStatement req = conn.prepareStatement("select idCom, PrixTotal, statutCommande from Commande where mailclient = ?");
+			req.setString(1, mail);
+			ResultSet res = req.executeQuery();
+			System.out.println("-- La liste des clients -- ");
+			System.out.println("idCom | prixTotal | statut ");
+			while (res.next()){
+				idCom = res.getInt(1);
+				prixTotal = res.getInt(2);
+				statut = res.getString(3);
+				System.out.println(idCom+" | "+prixTotal+" | "+ statut);
+			}
+			}catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 	}
+
+	public void afficherTousFormat() {
+	// TODO Auto-generated method stub
+	try{
+		String taille, libelle;
+		int idF, nbPixel;
+		PreparedStatement req = conn.prepareStatement("select idF, taille, nbPixel, libelle from Format");
+		ResultSet res = req.executeQuery();
+		System.out.println("-- La liste des format -- ");
+		System.out.println("idF | taille | nbPixel | libelle ");
+		while (res.next()){
+			idF = res.getInt(1);
+			taille = res.getString(2);
+			nbPixel = res.getInt(3);
+			libelle = res.getString(4);
+			System.out.println(idF+" | "+taille+" | "+nbPixel+" | "+ libelle);
+		}
+		}catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			}
+		}
+
+	public int TrouverSociété(int idF, int quantite) {
+		try{
+			int idS;
+			PreparedStatement req = conn.prepareStatement(""
+					+ "select ids "
+					+ "from formatSociete "
+					+ "where idf = ? and prixunitaire = ("
+					+ "select min(prixunitaire) "
+					+ "from formatsociete "
+					+ "where stock >= ? and idf = ?)");
+			req.setInt(1, idF);
+			req.setInt(2, quantite);
+			req.setInt(3, idF);
+			ResultSet res = req.executeQuery();
+			while (res.next()){
+				idS = res.getInt(1);
+				System.out.println("la societe "+idS+" s'occupera du lot");
+			}
+			}catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				}
+		return 0;
+	}
+	}	
