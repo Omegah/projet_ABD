@@ -526,7 +526,7 @@ public class InterfaceClient {
 				}
 		return 0;
 	}
-	
+	// je suis un connardee]
 	
 	public void afficheImgAlbum(int idAlbum,String mail) {
 		try{
