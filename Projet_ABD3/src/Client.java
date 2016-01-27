@@ -229,11 +229,14 @@ connectee = false;
 		interfaceClient.afficherTousFormat();
 		idF = LectureClavier.lireEntier("CHoisir le format de l'album : ");
 		
-		idS = interfaceClient.TrouverSociété(idF, quantite);
+		idS = interfaceClient.TrouverSociete(idF, quantite);
+		interfaceClient.ajouterLot(idAlbum, idCom, quantite, idF, idS);
+		interfaceClient.MAJStock(quantite, idS, idF);
+		interfaceClient.MAJPrixTotal(quantite, idS, idF, idCom, idAlbum);
 		
 	}
 
-	private void AfficherTousCommande() {
+	public void AfficherTousCommande() {
 		// TODO Auto-generated method stub
 		interfaceClient.afficherTousCommande(mail);
 	}

@@ -89,6 +89,9 @@ public class Connexionsgbd {
 					case 5 :
 						client.AjoutPhotoAlbum();
 						break;
+					case 6:
+						client.AfficherTousCommande();
+						break;
 					case 7 :
 							client.CreationCommande();
 							break;
