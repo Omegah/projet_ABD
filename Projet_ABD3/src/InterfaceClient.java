@@ -301,20 +301,53 @@ public class InterfaceClient {
 	public void AfficheTousAlbum(String mail) {
 		try {
 			Statement stmt = conn.createStatement();
-			int idA;
-			boolean partage;
+			int idA, nbPhoto;
 			PreparedStatement req = conn.prepareStatement(
-					"select idAlbum from album where mailClient Like ? minus (select idAlbum from album natural join Livre natural join Calendrier natural join Agenda where mailClient = ?)");
+					"select idAlbum, count(idphoto) from album natural join photo where mailClient Like ? group by idALbum having idalbum not in(select idalbum from livre) and idalbum not in (select idalbum from calendrier) and idalbum not in (select idalbum from agenda)");
 			req.setString(1, mail);
-			req.setString(2, mail);
-			System.out.println("** Tous les albums normaux **");
-			System.out.println("idAlbum   ");
+			System.out.println("** albums simple **");
+			System.out.println(" idAlbum | nbPhoto");
 			ResultSet res = req.executeQuery();
 			while (res.next()) {
 				idA = res.getInt(1);
-
-				System.out.println(idA);
+				nbPhoto = res.getInt(2);
+				System.out.println(idA + "   |    "+ nbPhoto);
 			}
+			PreparedStatement req2 = conn.prepareStatement(
+					"select idAlbum, count(idPhoto) from album natural join livre natural join Photo where mailClient = ? group by idAlbum");
+			req2.setString(1, mail);
+			System.out.println("** Livre **");
+			System.out.println("idAlbum | nombre de photo");
+			ResultSet res2 = req2.executeQuery();
+			while (res2.next()) {
+				idA = res2.getInt(1);
+				nbPhoto = res2.getInt(2);
+				System.out.println(idA + "   |   " + nbPhoto);
+			}
+			PreparedStatement req3 = conn.prepareStatement(
+					"select idAlbum, count(idPhoto) from album natural join Calendrier natural join Photo where mailClient = ? group by idAlbum");
+			req3.setString(1, mail);
+			System.out.println("** Calendrier **");
+			System.out.println("idAlbum | nombre de photo");
+			ResultSet res3 = req3.executeQuery();
+			while (res3.next()) {
+				idA = res3.getInt(1);
+				nbPhoto = res3.getInt(2);
+				System.out.println(idA + "   |   " + nbPhoto);
+			}
+			PreparedStatement req4 = conn.prepareStatement(
+					"select idAlbum, count(idPhoto) from album natural join Agenda natural join Photo where mailClient = ? group by idAlbum");
+			req4.setString(1, mail);
+			System.out.println("** Agenda **");
+			System.out.println("idAlbum | nombre de photo");
+			ResultSet res4 = req4.executeQuery();
+			while (res4.next()) {
+				idA = res4.getInt(1);
+				nbPhoto = res4.getInt(2);
+				System.out.println(idA + "   |   " + nbPhoto);
+			}
+			
+			
 			System.out.println("\n \n");
 		} catch (SQLException e) {
 			System.out.println("Pb dans BD : ROLLBACK !!");

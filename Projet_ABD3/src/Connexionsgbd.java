@@ -14,7 +14,7 @@ public class Connexionsgbd {
 			int choix = 0;
 			//Variable pour savoir si on se connecte en tant qu'administrateur admin = 1 si on est admin 
 
-			int admin = 1;
+			int admin = 0;
 			int i =0;
 
 			String jdbcDriver, dbUrl, username, password;
