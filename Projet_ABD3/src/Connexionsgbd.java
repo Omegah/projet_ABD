@@ -173,8 +173,21 @@ public class Connexionsgbd {
 						String mail = LectureClavier.lireChaine();
 						interfaceGestion.supprimerClient(mail);
 						break;
-					case 10 :  // 10 Deconnecter
-						
+					case 10 :  // 10 Modifier P
+						String nom7,nom8,adresse2;
+						int delai2,pref2;
+						System.out.println("Renseignez le nom actuel du prestataire : ");
+						nom7 = LectureClavier.lireChaine();
+						System.out.println("Renseignez le nouveau nom du prestataire : ");
+						nom8 = LectureClavier.lireChaine();
+						System.out.println("Renseignez la nouvelle adresse du prestataire :");
+						adresse2 = LectureClavier.lireChaine();
+						pref2 =LectureClavier.lireEntier("Renseignez la nouvelle qualité du prestataire :");
+						delai2 =LectureClavier.lireEntier("Renseignez le nouveau delai maximum du prestataire :");
+						interfaceGestion.ModifierPrestataire(nom7, nom8, adresse2, pref2, delai2);;
+						break;
+					case 11 :  // 10 Deconnecter
+						admin = 0;
 						break;
 					case 99 : //99- Quitter l'application
 						System.exit(0);;

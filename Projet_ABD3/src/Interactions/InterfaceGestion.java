@@ -22,7 +22,6 @@ public class InterfaceGestion {
 		
 		
 		PreparedStatement st = conn.prepareStatement("insert into Societe values (?,?,?,?,?)");
-		System.out.println("PO0");
 
 		st.setInt(1, Utils.getLastId("Societe","idS",conn));
 		st.setString(2, nomS);
@@ -35,6 +34,27 @@ public class InterfaceGestion {
 		
 	}
 	
+	public void ModifierPrestataire(String societe,String nouveauNom,String adresse,int pref,int delai) throws SQLException{
+		
+		PreparedStatement req = conn.prepareStatement("select idS from societe where nomSociete=?");
+		req.setString(1,societe);
+		ResultSet res = req.executeQuery();
+		res.next();
+		int idS = res.getInt(1);
+		req.close();
+		
+		PreparedStatement st = conn.prepareStatement("update societe set adresse=? , preference=? , delai=?,nomsociete=?  where idS=?");
+
+		st.setString(1, adresse);
+		st.setInt(2, pref);
+		st.setInt(3, delai);
+		st.setString(4, nouveauNom);	
+		st.setInt(5, idS);	
+		st.executeQuery();
+		conn.commit();
+		System.out.println("prestataire "+societe+" mis a jour.");
+		
+	}
 	
 
 	public boolean AjoutDispositif(String societe) throws SQLException {
@@ -250,6 +270,40 @@ public class InterfaceGestion {
 		 
 	 }
 	 
+	 public void verifListeSuppPrestataire() throws SQLException {
+		 PreparedStatement req = conn.prepareStatement("select idS from ListeSuppPrestataire natural where nbLot=0");
+			ResultSet res = req.executeQuery();
+						
+			while(res.next()) {
+				int idS = res.getInt(1);
+				PreparedStatement req2 = conn.prepareStatement("delete from ListeSuppPrestataire where idS=?");
+				req2.setInt(1, idS);
+				req2.executeQuery();	
+				
+				PreparedStatement req3 = conn.prepareStatement("delete from societe where idS=?");
+				req3.setInt(1, idS);
+				req3.executeQuery();			
+			}
+
+	 }
+	 
+	 
+	 public void verifListeSuppClient() throws SQLException {
+		 PreparedStatement req = conn.prepareStatement("select mailClient from ListeSuppClient natural where nbCommande=0 and nbImageP=0");
+			ResultSet res = req.executeQuery();
+						
+			while(res.next()) {
+				String mail = res.getString(1);
+				PreparedStatement req2 = conn.prepareStatement("delete from ListeSuppClient where mailClient=?");
+				req2.setString(1, mail);
+				req2.executeQuery();					
+				
+				PreparedStatement req3 = conn.prepareStatement("delete from client where mailClient=?");
+				req3.setString(1, mail);
+				req3.executeQuery();		
+			}
+	 }
+	 	 
 	 public void AfficherPrestataires() throws SQLException {
 
 			Statement stmt = conn.createStatement();
