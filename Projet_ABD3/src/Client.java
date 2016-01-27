@@ -1,4 +1,3 @@
-
 public class Client {
 
 	private String nom;
@@ -13,7 +12,8 @@ public class Client {
 		this.interfaceClient = i;
 	}
 
-	public Client(boolean connectee,String mail, String nom, String prenom, String adresse, String mDP,InterfaceClient i) {
+	public Client(boolean connectee, String mail, String nom, String prenom,
+			String adresse, String mDP, InterfaceClient i) {
 		this.connectee = connectee;
 		this.mail = mail;
 		this.nom = nom;
@@ -40,7 +40,8 @@ public class Client {
 		System.out.print("mot de passe :");
 		System.out.flush();
 		tempMotdepasse = LectureClavier.lireChaine();
-		if (interfaceClient.CreationClient(tempNom, tempPrenom, tempMail, tempAdresse, tempMotdepasse)) {
+		if (interfaceClient.CreationClient(tempNom, tempPrenom, tempMail,
+				tempAdresse, tempMotdepasse)) {
 			System.out.println("inscription rï¿½ussit");
 			this.nom = tempNom;
 			this.prenom = tempPrenom;
@@ -54,8 +55,6 @@ public class Client {
 
 	}
 
-	
-
 	public void AjoutImage() {
 		int resolution;
 		String URL, information;
@@ -68,7 +67,8 @@ public class Client {
 			System.out.flush();
 			information = LectureClavier.lireChaine();
 			System.out.flush();
-			resolution = LectureClavier.lireEntier("entrez la resolution de l'image :");
+			resolution = LectureClavier
+					.lireEntier("entrez la resolution de l'image :");
 			interfaceClient.Ajoutimage(getMail(), URL, information, resolution);
 			interfaceClient.AfficheTousImages(mail);
 		}
@@ -113,7 +113,8 @@ public class Client {
 			String postface = LectureClavier.lireChaine();
 
 			interfaceClient.AfficheTousImages(mail);
-			int idI = LectureClavier.lireEntier("Choisir une image de couverture de la liste suivante :");
+			int idI = LectureClavier
+					.lireEntier("Choisir une image de couverture de la liste suivante :");
 
 			System.out.println("Donner le titre du livre : ");
 			System.out.flush();
@@ -131,31 +132,38 @@ public class Client {
 			System.out.println("** 1- Journalier (365 pages)");
 			System.out.println("** 2- Hebdomadaire (56 pages)");
 			System.out.println("**********************");
-			int choix = LectureClavier.lireEntier("Choisir le type d'agenda : ");
-			
-			if(choix == 1)
+			int choix = LectureClavier
+					.lireEntier("Choisir le type d'agenda : ");
+
+			if (choix == 1)
 				interfaceClient.AjoutAgenda("Journalier", mail);
-			else if(choix ==2)				
+			else if (choix == 2)
 				interfaceClient.AjoutAgenda("Hebdomadaire", mail);
 		}
 	}
-	
+
 	private void AjoutCalendrier() {
 		String typeC;
 
 		System.out.println("--- Creation d'un Calendrier ---");
 
-		int type = LectureClavier.lireEntier("Donner le type du calendrier  : \n1- bureau\n2-mural ");
-		if(type==1)typeC="bureau";else typeC="mural";
+		int type = LectureClavier
+				.lireEntier("Donner le type du calendrier  : \n1- bureau\n2-mural ");
+		if (type == 1)
+			typeC = "bureau";
+		else
+			typeC = "mural";
 
 		interfaceClient.AfficheTousImages(mail);
-		int idp = LectureClavier.lireEntier("choisit une photo pour la couverture (Donner l'id ) :");
+		int idp = LectureClavier
+				.lireEntier("choisit une photo pour la couverture (Donner l'id ) :");
 
-		interfaceClient.AjoutCalendrier(typeC, idp,mail);
+		interfaceClient.AjoutCalendrier(typeC, idp, mail);
 	}
-	
-	public void CreationCommande(){
-		System.out.println("************ Creation d'une commande ! **************");
+
+	public void CreationCommande() {
+		System.out
+				.println("************ Creation d'une commande ! **************");
 		interfaceClient.CreationCommande(mail);
 	}
 
@@ -164,23 +172,24 @@ public class Client {
 		System.out.println("Choisir un image de la liste suivante : ");
 		interfaceClient.AfficheTousImages(mail);
 		int idp = LectureClavier.lireEntier("Votre choix ?");
-		
+
 		System.out.println("Choisir un album de la liste : ");
 		interfaceClient.AfficheTousAlbum(mail);
 		int idA = LectureClavier.lireEntier("Votre choix ?");
-		
-		interfaceClient.creerPhoto(idp, idA);
-		
+		if(interfaceClient.estUlise(idA))
+			interfaceClient.creerPhoto(idp, idA);
+
 	};
-	
-public void PartageImage() {
-	System.out.println("--- Partage d'une image ---");	
-	System.out.println("Choisir un image de la liste suivante : ");
-	interfaceClient.AfficheTousImages(mail);
-	int idI = LectureClavier.lireEntier("Votre choix ?");
-	
-	interfaceClient.PartageImage(idI);
+
+	public void PartageImage() {
+		System.out.println("--- Partage d'une image ---");
+		System.out.println("Choisir un image de la liste suivante : ");
+		interfaceClient.AfficheTousImages(mail);
+		int idI = LectureClavier.lireEntier("Votre choix ?");
+
+		interfaceClient.PartageImage(idI);
 	}
+
 	public String getNom() {
 		return nom;
 	}
@@ -215,7 +224,7 @@ public void PartageImage() {
 	}
 
 	public void deconnecter() {
-connectee = false;		
+		connectee = false;
 	}
 
 	public void AjouterLot() {
@@ -223,26 +232,25 @@ connectee = false;
 		System.out.println("******* Ajout d'un lot à une commande *********");
 		AfficherTousCommande();
 		idCom = LectureClavier.lireEntier("CHoisir une commande (idCom) : ");
+		
+		if(interfaceClient.estCommande(idCom)){
 		AfficheTousAlbums();
 		idAlbum = LectureClavier.lireEntier("Choisir un album (IdA):");
-		quantite = LectureClavier.lireEntier("Combien voulez vous de cet album ?");
+		quantite = LectureClavier
+				.lireEntier("Combien voulez vous de cet album ?");
 		interfaceClient.afficherTousFormat();
 		idF = LectureClavier.lireEntier("CHoisir le format de l'album : ");
-		
+
 		idS = interfaceClient.TrouverSociete(idF, quantite);
 		interfaceClient.ajouterLot(idAlbum, idCom, quantite, idF, idS);
 		interfaceClient.MAJStock(quantite, idS, idF, idAlbum);
 		interfaceClient.MAJPrixTotal(quantite, idS, idF, idCom, idAlbum);
-		
+		}
 	}
 
 	public void AfficherTousCommande() {
 		// TODO Auto-generated method stub
 		interfaceClient.afficherTousCommande(mail);
 	}
-
-	
-
-	
 
 }

@@ -14,11 +14,13 @@ public class InterfaceClient {
 		InterfaceClient.conn = conn;
 	}
 
-	public boolean CreationClient(String nom, String prenom, String mail, String adresse, String mdp) {
+	public boolean CreationClient(String nom, String prenom, String mail,
+			String adresse, String mdp) {
 		try {
 			Statement stmt = conn.createStatement();
 
-			PreparedStatement st = conn.prepareStatement("insert into Client values (?,?,?,?,?)");
+			PreparedStatement st = conn
+					.prepareStatement("insert into Client values (?,?,?,?,?)");
 			st.setString(1, mail);
 			st.setString(2, nom);
 			st.setString(3, prenom);
@@ -70,20 +72,24 @@ public class InterfaceClient {
 
 	}
 
-	public void Ajoutimage(String mail, String uRL, String information, int resolution) {
+	public void Ajoutimage(String mail, String uRL, String information,
+			int resolution) {
 		int numImage = 0;
 
 		try {
 			Statement stmt = conn.createStatement();
 
-			PreparedStatement req = conn.prepareStatement("select max(idI) from image");
+			PreparedStatement req = conn
+					.prepareStatement("select max(idI) from image");
 			ResultSet res = req.executeQuery();
 			while (res.next())
 				numImage = res.getInt(1);
 
-			System.out.println("il y a " + numImage + " images sur la base de donnï¿½es");
+			System.out.println("il y a " + numImage
+					+ " images sur la base de donnï¿½es");
 
-			PreparedStatement st = conn.prepareStatement("insert into image values (?,?,?,?,?,?)");
+			PreparedStatement st = conn
+					.prepareStatement("insert into image values (?,?,?,?,?,?)");
 			st.setInt(1, numImage + 1);
 			st.setInt(2, 0);
 			st.setString(3, uRL);
@@ -112,14 +118,17 @@ public class InterfaceClient {
 		try {
 			Statement stmt = conn.createStatement();
 
-			PreparedStatement req = conn.prepareStatement("select max(idAlbum) from Album");
+			PreparedStatement req = conn
+					.prepareStatement("select max(idAlbum) from Album");
 			ResultSet res = req.executeQuery();
 			int numAlbum = 0;
 			while (res.next())
 				numAlbum = res.getInt(1);
 
-			System.out.println("il y a " + numAlbum + " album sur la base de donnï¿½es");
-			PreparedStatement st = conn.prepareStatement("insert into Album values (?,?)");
+			System.out.println("il y a " + numAlbum
+					+ " album sur la base de donnï¿½es");
+			PreparedStatement st = conn
+					.prepareStatement("insert into Album values (?,?)");
 			st.setInt(1, numAlbum + 1);
 			st.setString(2, mailC);
 
@@ -142,19 +151,22 @@ public class InterfaceClient {
 	// titreLivre)
 	// var a pour dire si on creer un nouveau livre ou transformer un album
 	// normal en livre a = true => transformer
-	public void AjoutLivre(String preface, String postface, int idI, String titreL, String mailC) {
+	public void AjoutLivre(String preface, String postface, int idI,
+			String titreL, String mailC) {
 		try {
 			Statement stmt = conn.createStatement();
 			int idPC;
 
 			AjoutAlbum(mailC);
-			PreparedStatement req = conn.prepareStatement("select count(idAlbum) from Album");
+			PreparedStatement req = conn
+					.prepareStatement("select count(idAlbum) from Album");
 			ResultSet res = req.executeQuery();
 			int numAlbum = 0;
 			while (res.next())
 				numAlbum = res.getInt(1);
 
-			PreparedStatement req1 = conn.prepareStatement("insert into Livre values (?,?,?,?,?)");
+			PreparedStatement req1 = conn
+					.prepareStatement("insert into Livre values (?,?,?,?,?)");
 			req1.setInt(1, numAlbum);
 			req1.setString(2, preface);
 			req1.setString(3, postface);
@@ -185,13 +197,15 @@ public class InterfaceClient {
 			int idPC;
 
 			AjoutAlbum(mailC);
-			PreparedStatement req = conn.prepareStatement("select count(idAlbum) from Album");
+			PreparedStatement req = conn
+					.prepareStatement("select count(idAlbum) from Album");
 			ResultSet res = req.executeQuery();
 			int numAlbum = 0;
 			while (res.next())
 				numAlbum = res.getInt(1);
 
-			PreparedStatement req1 = conn.prepareStatement("insert into Calendrier values (?,?,?)");
+			PreparedStatement req1 = conn
+					.prepareStatement("insert into Calendrier values (?,?,?)");
 			req1.setInt(1, numAlbum);
 			req1.setString(2, typeC);
 			idPC = creerPhoto(idp, numAlbum);
@@ -218,13 +232,15 @@ public class InterfaceClient {
 		try {
 			Statement stmt = conn.createStatement();
 			AjoutAlbum(mailC);
-			PreparedStatement req = conn.prepareStatement("select count(idAlbum) from Album");
+			PreparedStatement req = conn
+					.prepareStatement("select count(idAlbum) from Album");
 			ResultSet res = req.executeQuery();
 			int numAlbum = 0;
 			while (res.next())
 				numAlbum = res.getInt(1);
 
-			PreparedStatement req1 = conn.prepareStatement("insert into Agenda values (?,?)");
+			PreparedStatement req1 = conn
+					.prepareStatement("insert into Agenda values (?,?)");
 			req1.setInt(1, numAlbum);
 			req1.setString(2, type);
 
@@ -244,14 +260,16 @@ public class InterfaceClient {
 			}
 		}
 	}
+
 	public void PartageImage(int idI) {
-		try{
-			PreparedStatement req = conn.prepareStatement("update image set partage = 1 where idI =  ? ");
+		try {
+			PreparedStatement req = conn
+					.prepareStatement("update image set partage = 1 where idI =  ? ");
 			req.setInt(1, idI);
 			req.executeQuery();
 			conn.commit();
 			System.out.println("Partage de l'image : REUSSI !!");
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			System.out.println("Pb dans BD : ROLLBACK !!");
 			e.printStackTrace();
 			try {
@@ -269,15 +287,17 @@ public class InterfaceClient {
 
 	public void AfficheTousImages(String mailC) {
 		try {
-			//Statement stmt = conn.createStatement();
+			// Statement stmt = conn.createStatement();
 			int idI, resolution;
 			String URL, mail, info;
 			boolean partage;
-			PreparedStatement req = conn.prepareStatement("select * from image where mailClient Like ? or partage = ?");
+			PreparedStatement req = conn
+					.prepareStatement("select * from image where mailClient Like ? or partage = ?");
 			req.setString(1, mailC);
 			req.setInt(2, 1);
 			System.out.println("** Tous les images disponibles **");
-			System.out.println("idI | partage | URL | mailClient | informationImage | resolution  ");
+			System.out
+					.println("idI | partage | URL | mailClient | informationImage | resolution  ");
 			ResultSet res = req.executeQuery();
 			while (res.next()) {
 				idI = res.getInt(1);
@@ -286,8 +306,8 @@ public class InterfaceClient {
 				mail = res.getString(4);
 				info = res.getString(5);
 				resolution = res.getInt(6);
-				System.out.println(
-						idI + " | " + partage + " | " + URL + " | " + mail + " | " + info + " | " + resolution);
+				System.out.println(idI + " | " + partage + " | " + URL + " | "
+						+ mail + " | " + info + " | " + resolution);
 			}
 			System.out.println("\n \n");
 		} catch (SQLException e) {
@@ -302,8 +322,8 @@ public class InterfaceClient {
 		try {
 			Statement stmt = conn.createStatement();
 			int idA, nbPhoto;
-			PreparedStatement req = conn.prepareStatement(
-					"select idAlbum, count(idphoto) from album natural join photo where mailClient Like ? group by idALbum having idalbum not in(select idalbum from livre) and idalbum not in (select idalbum from calendrier) and idalbum not in (select idalbum from agenda)");
+			PreparedStatement req = conn
+					.prepareStatement("select idAlbum, count(idphoto) from album natural join photo where mailClient Like ? group by idALbum having idalbum not in(select idalbum from livre) and idalbum not in (select idalbum from calendrier) and idalbum not in (select idalbum from agenda)");
 			req.setString(1, mail);
 			System.out.println("** albums simple **");
 			System.out.println(" idAlbum | nbPhoto");
@@ -311,10 +331,10 @@ public class InterfaceClient {
 			while (res.next()) {
 				idA = res.getInt(1);
 				nbPhoto = res.getInt(2);
-				System.out.println(idA + "   |    "+ nbPhoto);
+				System.out.println(idA + "   |    " + nbPhoto);
 			}
-			PreparedStatement req2 = conn.prepareStatement(
-					"select idAlbum, count(idPhoto) from album natural join livre natural left outer join Photo where mailClient = ? group by idAlbum");
+			PreparedStatement req2 = conn
+					.prepareStatement("select idAlbum, count(idPhoto) from album natural join livre natural left outer join Photo where mailClient = ? group by idAlbum");
 			req2.setString(1, mail);
 			System.out.println("** Livre **");
 			System.out.println("idAlbum | nombre de photo");
@@ -324,8 +344,8 @@ public class InterfaceClient {
 				nbPhoto = res2.getInt(2);
 				System.out.println(idA + "   |   " + nbPhoto);
 			}
-			PreparedStatement req3 = conn.prepareStatement(
-					"select idAlbum, count(idPhoto) from album natural join Calendrier natural left outer join Photo where mailClient = ? group by idAlbum");
+			PreparedStatement req3 = conn
+					.prepareStatement("select idAlbum, count(idPhoto) from album natural join Calendrier natural left outer join Photo where mailClient = ? group by idAlbum");
 			req3.setString(1, mail);
 			System.out.println("** Calendrier **");
 			System.out.println("idAlbum | nombre de photo");
@@ -335,8 +355,8 @@ public class InterfaceClient {
 				nbPhoto = res3.getInt(2);
 				System.out.println(idA + "   |   " + nbPhoto);
 			}
-			PreparedStatement req4 = conn.prepareStatement(
-					"select idAlbum, count(idPhoto) from album natural join Agenda natural left outer join Photo where mailClient = ? group by idAlbum");
+			PreparedStatement req4 = conn
+					.prepareStatement("select idAlbum, count(idPhoto) from album natural join Agenda natural left outer join Photo where mailClient = ? group by idAlbum");
 			req4.setString(1, mail);
 			System.out.println("** Agenda **");
 			System.out.println("idAlbum | nombre de photo");
@@ -346,8 +366,7 @@ public class InterfaceClient {
 				nbPhoto = res4.getInt(2);
 				System.out.println(idA + "   |   " + nbPhoto);
 			}
-			
-			
+
 			System.out.println("\n \n");
 		} catch (SQLException e) {
 			System.out.println("Pb dans BD : ROLLBACK !!");
@@ -356,6 +375,7 @@ public class InterfaceClient {
 		}
 
 	}
+
 	// Creer une photo de l'image i : Photo(idPhoto, titrePhoto,numPage,
 	// #idAlbum, #idI, commentaire)
 
@@ -366,25 +386,26 @@ public class InterfaceClient {
 			System.out.flush();
 			String titreP = LectureClavier.lireChaine();
 
-			
-
 			System.out.println("Donner une commentaire a la photo choisie : ");
 			System.out.flush();
 			String comment = LectureClavier.lireChaine();
 
-			PreparedStatement req = conn.prepareStatement("select max(idPhoto) from Photo");
+			PreparedStatement req = conn
+					.prepareStatement("select max(idPhoto) from Photo");
 			ResultSet res = req.executeQuery();
 			int numPhoto = 0;
 			while (res.next())
 				numPhoto = res.getInt(1);
-			PreparedStatement req2 = conn.prepareStatement("select max(numpage) from Photo where idAlbum = ?");
+			PreparedStatement req2 = conn
+					.prepareStatement("select max(numpage) from Photo where idAlbum = ?");
 			req2.setInt(1, idAlbum);
 			ResultSet res2 = req2.executeQuery();
 			int numPage = 0;
 			while (res2.next())
 				numPage = res2.getInt(1);
-			
-			PreparedStatement req1 = conn.prepareStatement("insert into Photo values (?,?,?,?,?,?)");
+
+			PreparedStatement req1 = conn
+					.prepareStatement("insert into Photo values (?,?,?,?,?,?)");
 			req1.setInt(1, numPhoto + 1);
 			req1.setString(2, titreP);
 			req1.setInt(3, numPage + 1);
@@ -417,37 +438,43 @@ public class InterfaceClient {
 					.prepareStatement("select mailClient,nom,prenom,adressePostale,MDP from Client");
 			ResultSet res = req.executeQuery();
 			System.out.println("-- La liste des clients -- ");
-			System.out.println("mailClient | Nom | Prenom | Adresse Postale | MDP ");
+			System.out
+					.println("mailClient | Nom | Prenom | Adresse Postale | MDP ");
 			while (res.next()) {
 				mail = res.getString(1);
 				nom = res.getString(2);
 				prenom = res.getString(3);
 				adP = res.getString(4);
 				MDP = res.getString(5);
-				System.out.println(mail + " | " + nom + " | " + prenom + " | " + adP + " | " + MDP);
+				System.out.println(mail + " | " + nom + " | " + prenom + " | "
+						+ adP + " | " + MDP);
 			}
 		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 	}
+
 	public void CreationCommande(String mail) {
 		// TODO Auto-generated method stub
 		try {
 			Statement stmt = conn.createStatement();
 
-			PreparedStatement req = conn.prepareStatement("select count(idCom) from Commande");
+			PreparedStatement req = conn
+					.prepareStatement("select count(idCom) from Commande");
 			ResultSet res = req.executeQuery();
 			int numCommande = 0;
 			while (res.next())
 				numCommande = res.getInt(1);
 
-			System.out.println("il y a " + numCommande + " commandes sur la base de donnï¿½es");
-			PreparedStatement st = conn.prepareStatement("insert into Commande values (?,?,?,?)");
+			System.out.println("il y a " + numCommande
+					+ " commandes sur la base de donnï¿½es");
+			PreparedStatement st = conn
+					.prepareStatement("insert into Commande values (?,?,?,?)");
 			st.setInt(1, numCommande + 1);
 			st.setString(2, mail);
 			st.setInt(3, 0);
-			st.setString(4, "en Crï¿½ation");
+			st.setString(4, "en creation");
 
 			st.executeQuery();
 			conn.commit();
@@ -466,71 +493,72 @@ public class InterfaceClient {
 
 	public void afficherTousCommande(String mail) {
 		// TODO Auto-generated method stub
-		try{
+		try {
 			String mailCLient, statut;
 			int idCom, prixTotal;
-			PreparedStatement req = conn.prepareStatement("select idCom, PrixTotal, statutCommande from Commande where mailclient = ?");
+			PreparedStatement req = conn
+					.prepareStatement("select idCom, PrixTotal, statutCommande from Commande where mailclient = ?");
 			req.setString(1, mail);
 			ResultSet res = req.executeQuery();
 			System.out.println("-- La liste des clients -- ");
 			System.out.println("idCom | prixTotal | statut ");
-			while (res.next()){
+			while (res.next()) {
 				idCom = res.getInt(1);
 				prixTotal = res.getInt(2);
 				statut = res.getString(3);
-				System.out.println(idCom+" | "+prixTotal+" | "+ statut);
+				System.out.println(idCom + " | " + prixTotal + " | " + statut);
 			}
-			}catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 	public void afficherTousFormat() {
-	// TODO Auto-generated method stub
-	try{
-		String taille, libelle;
-		int idF, nbPixel;
-		PreparedStatement req = conn.prepareStatement("select idF, taille, nbPixel, libelle from Format");
-		ResultSet res = req.executeQuery();
-		System.out.println("-- La liste des format -- ");
-		System.out.println("idF | taille | nbPixel | libelle ");
-		while (res.next()){
-			idF = res.getInt(1);
-			taille = res.getString(2);
-			nbPixel = res.getInt(3);
-			libelle = res.getString(4);
-			System.out.println(idF+" | "+taille+" | "+nbPixel+" | "+ libelle);
-		}
-		}catch (SQLException e1) {
+		// TODO Auto-generated method stub
+		try {
+			String taille, libelle;
+			int idF, nbPixel;
+			PreparedStatement req = conn
+					.prepareStatement("select idF, taille, nbPixel, libelle from Format");
+			ResultSet res = req.executeQuery();
+			System.out.println("-- La liste des format -- ");
+			System.out.println("idF | taille | nbPixel | libelle ");
+			while (res.next()) {
+				idF = res.getInt(1);
+				taille = res.getString(2);
+				nbPixel = res.getInt(3);
+				libelle = res.getString(4);
+				System.out.println(idF + " | " + taille + " | " + nbPixel
+						+ " | " + libelle);
+			}
+		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-			}
 		}
+	}
 
 	public int TrouverSociete(int idF, int quantite) {
-		try{
+		try {
 			int idS = 0;
-			PreparedStatement req = conn.prepareStatement(""
-					+ "select ids "
+			PreparedStatement req = conn.prepareStatement("" + "select ids "
 					+ "from formatSociete "
 					+ "where idf = ? and prixunitaire = ("
-					+ "select min(prixunitaire) "
-					+ "from formatsociete "
+					+ "select min(prixunitaire) " + "from formatsociete "
 					+ "where stock >= ? and idf = ?)");
 			req.setInt(1, idF);
 			req.setInt(2, quantite);
 			req.setInt(3, idF);
 			ResultSet res = req.executeQuery();
-			while (res.next()){
+			while (res.next()) {
 				idS = res.getInt(1);
-				System.out.println("la societe "+idS+" s'occupera du lot");
+				System.out.println("la societe " + idS + " s'occupera du lot");
 			}
 			return idS;
-			}catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-				}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 		return 0;
 	}
 
@@ -539,14 +567,17 @@ public class InterfaceClient {
 		try {
 			Statement stmt = conn.createStatement();
 
-			PreparedStatement req = conn.prepareStatement("select count(idLot) from lot");
+			PreparedStatement req = conn
+					.prepareStatement("select count(idLot) from lot");
 			ResultSet res = req.executeQuery();
 			int numLot = 0;
 			while (res.next())
 				numLot = res.getInt(1);
 
-			System.out.println("il y a " + numLot + " lots sur la base de donnï¿½es");
-			PreparedStatement st = conn.prepareStatement("insert into Lot values (?,?,?,?,?,?)");
+			System.out.println("il y a " + numLot
+					+ " lots sur la base de donnï¿½es");
+			PreparedStatement st = conn
+					.prepareStatement("insert into Lot values (?,?,?,?,?,?)");
 			st.setInt(1, numLot + 1);
 			st.setInt(2, idCom);
 			st.setInt(3, idAlbum);
@@ -555,8 +586,8 @@ public class InterfaceClient {
 			st.setInt(6, idF);
 
 			st.executeQuery();
-			
-			CreationLivraison(numLot+1);
+
+			CreationLivraison(numLot + 1);
 			conn.commit();
 			System.out.println("Ajout d'un lot : REUSSI !! ");
 		} catch (SQLException e) {
@@ -569,21 +600,24 @@ public class InterfaceClient {
 				e1.printStackTrace();
 			}
 		}
-		
+
 	}
 
 	private void CreationLivraison(int idLot) {
 		try {
 			Statement stmt = conn.createStatement();
 
-			PreparedStatement req = conn.prepareStatement("select max(idlivraison) from Livraison");
+			PreparedStatement req = conn
+					.prepareStatement("select max(idlivraison) from Livraison");
 			ResultSet res = req.executeQuery();
 			int numLivraison = 0;
 			while (res.next())
 				numLivraison = res.getInt(1);
 
-			System.out.println("il y a " + numLivraison + " commandes sur la base de donnï¿½es");
-			PreparedStatement st = conn.prepareStatement("insert into livraison values (?,?,?)");
+			System.out.println("il y a " + numLivraison
+					+ " commandes sur la base de donnï¿½es");
+			PreparedStatement st = conn
+					.prepareStatement("insert into livraison values (?,?,?)");
 			st.setInt(1, numLivraison + 1);
 			st.setInt(2, idLot);
 			st.setString(3, "en cours");
@@ -602,28 +636,31 @@ public class InterfaceClient {
 	}
 
 	public void MAJStock(int quantite, int idS, int idF, int idAlbum) {
-		try{
+		try {
 			int nouveauStock = 0;
-			PreparedStatement req = conn.prepareStatement("select stock from formatSociete where idf = ? and ids = ?");
+			PreparedStatement req = conn
+					.prepareStatement("select stock from formatSociete where idf = ? and ids = ?");
 			req.setInt(1, idF);
 			req.setInt(2, idS);
 			ResultSet res = req.executeQuery();
-			while (res.next()){
+			while (res.next()) {
 				nouveauStock = res.getInt(1);
-				System.out.println("la societe à un stock de "+nouveauStock);
+				System.out.println("la societe à un stock de " + nouveauStock);
 			}
-			
+
 			int nbPhoto = 0;
-			PreparedStatement req4 = conn.prepareStatement("select count(idAlbum) from Photo where idAlbum = ?");
+			PreparedStatement req4 = conn
+					.prepareStatement("select count(idAlbum) from Photo where idAlbum = ?");
 			req4.setInt(1, idAlbum);
 			ResultSet res3 = req4.executeQuery();
-			while (res3.next()){
+			while (res3.next()) {
 				nbPhoto = res3.getInt(1);
-				System.out.println("le nombre de photo : "+ nbPhoto);
+				System.out.println("le nombre de photo : " + nbPhoto);
 			}
-			
-			nouveauStock = nouveauStock - quantite* nbPhoto;
-			PreparedStatement req2 = conn.prepareStatement("UPDATE formatSociete SET Stock=? WHERE idF=? and idS =?");
+
+			nouveauStock = nouveauStock - quantite * nbPhoto;
+			PreparedStatement req2 = conn
+					.prepareStatement("UPDATE formatSociete SET Stock=? WHERE idF=? and idS =?");
 			req2.setInt(1, nouveauStock);
 			req2.setInt(2, idF);
 			req2.setInt(3, idS);
@@ -638,49 +675,54 @@ public class InterfaceClient {
 			} catch (SQLException e1) {
 				// TODO Auto-generated catch block-/*87564210
 				e1.printStackTrace();
-				
+
 			}
 		}
 	}
 
-	public void MAJPrixTotal(int quantite, int idS, int idF, int idCom, int idAlbum) {
-		try{
+	public void MAJPrixTotal(int quantite, int idS, int idF, int idCom,
+			int idAlbum) {
+		try {
 			int prixUnitaire = 0;
-			PreparedStatement req = conn.prepareStatement("select prixunitaire from formatSociete where idf = ? and ids = ?");
+			PreparedStatement req = conn
+					.prepareStatement("select prixunitaire from formatSociete where idf = ? and ids = ?");
 			req.setInt(1, idF);
 			req.setInt(2, idS);
 			ResultSet res = req.executeQuery();
-			while (res.next()){
+			while (res.next()) {
 				prixUnitaire = res.getInt(1);
-				System.out.println("le prix unitaire est de "+prixUnitaire);
+				System.out.println("le prix unitaire est de " + prixUnitaire);
 			}
 			int nbPhoto = 0;
-			PreparedStatement req4 = conn.prepareStatement("select count(idAlbum) from Photo where idAlbum = ?");
+			PreparedStatement req4 = conn
+					.prepareStatement("select count(idAlbum) from Photo where idAlbum = ?");
 			req4.setInt(1, idAlbum);
 			ResultSet res3 = req4.executeQuery();
-			while (res3.next()){
+			while (res3.next()) {
 				nbPhoto = res3.getInt(1);
-				System.out.println("le nombre de photo : "+ nbPhoto);
+				System.out.println("le nombre de photo : " + nbPhoto);
 			}
-			
+
 			int prixCommande = quantite * prixUnitaire * nbPhoto;
 			int prixTotal = 0;
-			PreparedStatement req2 = conn.prepareStatement("select prixtotal from commande where idcom = ?");
+			PreparedStatement req2 = conn
+					.prepareStatement("select prixtotal from commande where idcom = ?");
 			req.setInt(1, idCom);
 			ResultSet res2 = req.executeQuery();
-			while (res2.next()){
+			while (res2.next()) {
 				prixTotal = res2.getInt(1);
-				System.out.println("le prix unitaire est de "+prixUnitaire);
+				System.out.println("le prix unitaire est de " + prixUnitaire);
 			}
 			prixTotal = prixTotal + prixCommande;
-			
-			PreparedStatement req3 = conn.prepareStatement("UPDATE Commande SET prixTotal=? WHERE idcom=?");
+
+			PreparedStatement req3 = conn
+					.prepareStatement("UPDATE Commande SET prixTotal=? WHERE idcom=?");
 			req3.setInt(1, prixTotal);
 			req3.setInt(2, idCom);
 			req3.executeQuery();
 			System.out.println("le prix de la commande a été mis à jours");
 			conn.commit();
-			} catch (SQLException e) {
+		} catch (SQLException e) {
 			System.out.println("Pb dans BD : ROLLBACK !!");
 			e.printStackTrace();
 			try {
@@ -689,6 +731,57 @@ public class InterfaceClient {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-		}	
-	}	
+		}
+	}
+
+	public boolean estCommande(int idCom) {
+		String statut = null;
+		PreparedStatement req;
+		try {
+			req = conn
+					.prepareStatement("select statutCommande from commande where idcom = ?");
+
+			req.setInt(1, idCom);
+			ResultSet res = req.executeQuery();
+			while (res.next()) {
+				statut = res.getString(1);
+				if (statut.equals("en creation")) {
+					return true;
+				} else {
+					System.out.println("Ne peut etre modifié : Commandé");
+					return false;
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+
+	}
+	public boolean estUlise(int idAlbum) {
+		String statut = null;
+		PreparedStatement req;
+		try {
+			req = conn
+					.prepareStatement("select distinct statutcommande from commande natural join lot natural join album where idalbum = ?");
+
+			req.setInt(1, idAlbum);
+			ResultSet res = req.executeQuery();
+			while (res.next()) {
+				statut = res.getString(1);
+				if (statut.equals("en creation")) {
+					return true;
+				} else {
+					System.out.println("Ne peut etre modifié : Commandé");
+					return false;
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
+
+	}
 }
