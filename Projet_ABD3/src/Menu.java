@@ -39,7 +39,9 @@ public class Menu {
 		System.out.println("** 7- Ajouter un format pour un prestataire");
 		System.out.println("** 8- Ajouter un format general");
 		System.out.println("** 9- Supprimer un client");
-		System.out.println("** 10- Deconnecter");
+		System.out.println("** 10- Modifier un prestataire");
+
+		System.out.println("** 11- Deconnecter");
 		System.out.println("** 99- Quitter l'application");
 		System.out.println("***********************************************");
 	}
