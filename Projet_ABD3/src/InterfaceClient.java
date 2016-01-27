@@ -302,6 +302,7 @@ public class InterfaceClient {
 		try {
 			Statement stmt = conn.createStatement();
 			int idA;
+			String titreL,typeC,typeA;
 			boolean partage;
 			PreparedStatement req = conn.prepareStatement(
 					"select idAlbum from album where mailClient Like ? minus (select idAlbum from album natural join Livre natural join Calendrier natural join Agenda where mailClient = ?)");
@@ -315,6 +316,39 @@ public class InterfaceClient {
 
 				System.out.println(idA);
 			}
+			req = conn.prepareStatement("select idAlbum,titreLivre from Livre natural join album where mailClient = ?");
+			req.setString(1, mail);
+			System.out.println("\n** Tous les livres **");
+			System.out.println("idAlbum   | titreLivre ");
+			res = req.executeQuery();
+			while(res.next()){
+				idA = res.getInt(1);
+				titreL = res.getString(2);
+				System.out.println(idA+" | "+titreL);
+			}
+			
+			req = conn.prepareStatement("select idAlbum,typeCalendrier from Calendrier natural join album where mailClient = ?");
+			req.setString(1, mail);
+			System.out.println("\n** Tous les calendriers **");
+			System.out.println("idA | typeCalendrier");
+			res = req.executeQuery();
+			while(res.next()){
+				idA = res.getInt(1);
+				typeC = res.getString(2);
+				System.out.println(idA+" | "+typeC);
+			}
+			
+			req = conn.prepareStatement("select idAlbum,typeAgenda from Agenda natural join album where mailClient = ?");
+			req.setString(1, mail);
+			System.out.println("\n** Tous les agendass **");
+			System.out.println("idA | typeAgenda");
+			res = req.executeQuery();
+			while(res.next()){
+				idA = res.getInt(1);
+				typeA = res.getString(2);
+				System.out.println(idA+" | "+typeA);
+			}
+			
 			System.out.println("\n \n");
 		} catch (SQLException e) {
 			System.out.println("Pb dans BD : ROLLBACK !!");
@@ -407,7 +441,7 @@ public class InterfaceClient {
 			st.setInt(1, numCommande + 1);
 			st.setString(2, mail);
 			st.setInt(3, 0);
-			st.setString(4, "en Création");
+			st.setString(4, "en Crï¿½ation");
 
 			st.executeQuery();
 			conn.commit();
@@ -468,7 +502,7 @@ public class InterfaceClient {
 			}
 		}
 
-	public int TrouverSociété(int idF, int quantite) {
+	public int TrouverSociete(int idF, int quantite) {
 		try{
 			int idS;
 			PreparedStatement req = conn.prepareStatement(""
@@ -491,6 +525,32 @@ public class InterfaceClient {
 				e1.printStackTrace();
 				}
 		return 0;
+	}
+	
+	
+	public void afficheImgAlbum(int idAlbum,String mail) {
+		try{
+		int idP,numP,idA,idI;
+		String titreP,comment;
+		PreparedStatement req = conn.prepareStatement("select  idPhoto,titrePhoto,numPage,idAlbum,idI,commentaire from photo natural join Album where mailclient = ?");
+		req.setString(1, mail);
+		
+		ResultSet res = req.executeQuery();
+		System.out.println("idPhoto | titre Photo | numPage | idAlbum | idI | commentaire");
+		while(res.next()){
+			idP = res.getInt(1);
+			titreP = res.getString(2);
+			numP = res.getInt(3);
+			idA = res.getInt(4);
+			idI = res.getInt(5);
+			comment = res.getString(6);
+			System.out.println(idP +" | "+ titreP+" | "+ numP+" | "+idA+" | "+idI+" | "+comment);
+		}
+		
+		}catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+			}
 	}	
 	
 }

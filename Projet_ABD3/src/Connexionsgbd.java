@@ -99,6 +99,9 @@ public class Connexionsgbd {
 					case 9 : 
 						client.PartageImage();
 						break;
+					case 10 :
+						client.AfficheImgAlbum();
+						break;
 					case 99 :
 						client.deconnecter();
 						break;

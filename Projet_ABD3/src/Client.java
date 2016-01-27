@@ -85,7 +85,7 @@ public class Client {
 			int choixA = LectureClavier.lireEntier("Votre choix ? ");
 			switch (choixA) {
 			case 1:
-				AjoutAlbum();
+				interfaceClient.AjoutAlbum(mail);
 				break;
 			case 2:
 				AjoutLivre();
@@ -220,7 +220,7 @@ connectee = false;
 
 	public void AjouterLot() {
 		int idAlbum, idCom, quantite, idF, idS;
-		System.out.println("******* Ajout d'un lot à une commande *********");
+		System.out.println("******* Ajout d'un lot ï¿½ une commande *********");
 		AfficherTousCommande();
 		idCom = LectureClavier.lireEntier("CHoisir une commande (idCom) : ");
 		AfficheTousAlbums();
@@ -229,13 +229,24 @@ connectee = false;
 		interfaceClient.afficherTousFormat();
 		idF = LectureClavier.lireEntier("CHoisir le format de l'album : ");
 		
-		idS = interfaceClient.TrouverSociété(idF, quantite);
+		idS = interfaceClient.TrouverSociete(idF, quantite);
 		
 	}
 
 	private void AfficherTousCommande() {
 		// TODO Auto-generated method stub
 		interfaceClient.afficherTousCommande(mail);
+	}
+
+	public void AfficheImgAlbum() {
+		int idAlbum;
+		System.out.println("--- Affichage des photos d'un album choisi ---");
+		AfficheTousAlbums();
+		idAlbum = LectureClavier.lireEntier("Choisir un album (IdA):");
+		
+		interfaceClient.afficheImgAlbum(idAlbum,mail);
+		
+		
 	}
 
 	
