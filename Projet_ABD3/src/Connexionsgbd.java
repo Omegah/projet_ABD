@@ -14,7 +14,7 @@ public class Connexionsgbd {
 			int choix = 0;
 			//Variable pour savoir si on se connecte en tant qu'administrateur admin = 1 si on est admin 
 
-			int admin = 0;
+			int admin = 1;
 			int i =0;
 
 			String jdbcDriver, dbUrl, username, password;
@@ -165,8 +165,10 @@ public class Connexionsgbd {
 						String libelle = LectureClavier.lireChaine();
 
 						interfaceGestion.ajouterFormat(taille, nbPixel, libelle);
-					case 9 : //9- 
-						
+					case 9 : //9- Supprimer un client
+						System.out.println("Renseignez le mail du client : ");
+						String mail = LectureClavier.lireChaine();
+						interfaceGestion.supprimerClient(mail);
 						break;
 					case 10 :  // 10 Deconnecter
 						

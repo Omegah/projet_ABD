@@ -407,7 +407,7 @@ public class InterfaceClient {
 			st.setInt(1, numCommande + 1);
 			st.setString(2, mail);
 			st.setInt(3, 0);
-			st.setString(4, "en Création");
+			st.setString(4, "en Crï¿½ation");
 
 			st.executeQuery();
 			conn.commit();
@@ -468,7 +468,7 @@ public class InterfaceClient {
 			}
 		}
 
-	public int TrouverSociété(int idF, int quantite) {
+	public int TrouverSociete(int idF, int quantite) {
 		try{
 			int idS;
 			PreparedStatement req = conn.prepareStatement(""
