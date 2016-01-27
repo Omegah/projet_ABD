@@ -314,7 +314,7 @@ public class InterfaceClient {
 			while (res.next()) {
 				idA = res.getInt(1);
 				nbPhoto = res.getInt(2);
-				System.out.println(idA + "   |    "+ nbPhoto);
+				System.out.println(idA + "   |    " + nbPhoto);
 			}
 
 			PreparedStatement req2 = conn.prepareStatement(
@@ -350,8 +350,7 @@ public class InterfaceClient {
 				nbPhoto = res4.getInt(2);
 				System.out.println(idA + "   |   " + nbPhoto);
 			}
-			
-			
+
 			System.out.println("\n \n");
 		} catch (SQLException e) {
 			System.out.println("Pb dans BD : ROLLBACK !!");
@@ -365,26 +364,23 @@ public class InterfaceClient {
 
 	public int creerPhoto(int idI, int idAlbum, String mail) {
 		try {
-			String mailc = null;
-			PreparedStatement p = conn.prepareStatement("select mailclient from album where idAlbum = ? ");
-			p.setInt(1, idAlbum);
-			ResultSet verif = p.executeQuery();
-			while (verif.next())
-				mailc = verif.getString(1);
-			if (mailc.equals(mail)) {
-				System.out.println("Information de la photo ");
-				System.out.println("Donner un titre a la photo choisie : ");
-				System.out.flush();
-				String titreP = LectureClavier.lireChaine();
+			/*
+			 * String mailc = null; PreparedStatement p = conn.prepareStatement(
+			 * "select mailclient from album where idAlbum = ? "); p.setInt(1,
+			 * idAlbum); ResultSet verif = p.executeQuery(); while
+			 * (verif.next()) mailc = verif.getString(1); if
+			 * (mailc.equals(mail)) {
+			 */
+			System.out.println("Information de la photo ");
+			System.out.println("Donner un titre a la photo choisie : ");
+			System.out.flush();
+			String titreP = LectureClavier.lireChaine();
 
+			int numPage = LectureClavier.lireEntier("Donner le numero de la page dans l'album ");
 
-				int numPage = LectureClavier.lireEntier("Donner le numero de la page dans l'album ");
-
-
-				System.out.println("Donner une commentaire a la photo choisie : ");
-				System.out.flush();
-				String comment = LectureClavier.lireChaine();
-
+			System.out.println("Donner une commentaire a la photo choisie : ");
+			System.out.flush();
+			String comment = LectureClavier.lireChaine();
 
 			PreparedStatement req = conn.prepareStatement("select max(idPhoto) from Photo");
 			ResultSet res = req.executeQuery();
@@ -396,7 +392,7 @@ public class InterfaceClient {
 			ResultSet res2 = req2.executeQuery();
 			while (res2.next())
 				numPage = res2.getInt(1);
-			
+
 			PreparedStatement req1 = conn.prepareStatement("insert into Photo values (?,?,?,?,?,?)");
 			req1.setInt(1, numPhoto + 1);
 			req1.setString(2, titreP);
@@ -405,15 +401,15 @@ public class InterfaceClient {
 			req1.setInt(5, idI);
 			req1.setString(6, comment);
 
-
-				req1.executeQuery();
-				conn.commit();
-				System.out.println("Ajout de la photo : REUSSI !!");
-				return numPhoto;
-			} else {
-				System.out.println("Ce n'est pas ton album  !!");
-
-			}
+			req1.executeQuery();
+			conn.commit();
+			System.out.println("Ajout de la photo : REUSSI !!");
+			return numPhoto;
+			/*
+			 * } else { System.out.println("Ce n'est pas ton album  !!");
+			 * 
+			 * }
+			 */
 
 		} catch (SQLException e) {
 			System.out.println("Pb dans BD : ROLLBACK !!");
@@ -556,9 +552,9 @@ public class InterfaceClient {
 			int idP, numP, idA, idI;
 			String titreP, comment;
 			PreparedStatement req = conn.prepareStatement(
-					"select  idPhoto,titrePhoto,numPage,idAlbum,idI,commentaire from photo natural join Album where mailclient = ?");
+					"select  idPhoto,titrePhoto,numPage,idAlbum,idI,commentaire from photo natural join Album where mailclient = ? and idAlbum = ?");
 			req.setString(1, mail);
-
+			req.setInt(2, idAlbum);
 			ResultSet res = req.executeQuery();
 			System.out.println("idPhoto | titre Photo | numPage | idAlbum | idI | commentaire");
 			while (res.next()) {
@@ -612,9 +608,8 @@ public class InterfaceClient {
 
 	}
 
-
 	public void MAJStock(int quantite, int idS, int idF, int idAlbum) {
-		try{
+		try {
 			int nouveauStock = 0;
 			PreparedStatement req = conn.prepareStatement("select stock from formatSociete where idf = ? and ids = ?");
 			req.setInt(1, idF);
@@ -624,17 +619,17 @@ public class InterfaceClient {
 				nouveauStock = res.getInt(1);
 				System.out.println("la societe � un stock de " + nouveauStock);
 			}
-			
+
 			int nbPhoto = 0;
 			PreparedStatement req4 = conn.prepareStatement("select count(idA) from Photo where idAlbum = ?");
 			req4.setInt(1, idAlbum);
 			ResultSet res3 = req.executeQuery();
-			while (res3.next()){
+			while (res3.next()) {
 				nbPhoto = res3.getInt(1);
-				System.out.println("le nombre de photo : "+ nbPhoto);
+				System.out.println("le nombre de photo : " + nbPhoto);
 			}
-			
-			nouveauStock = nouveauStock - quantite* nbPhoto;
+
+			nouveauStock = nouveauStock - quantite * nbPhoto;
 			PreparedStatement req2 = conn.prepareStatement("UPDATE formatSociete SET Stock=? WHERE idF=? and idS =?");
 			req2.setInt(1, nouveauStock);
 			req2.setInt(2, idF);
@@ -666,7 +661,7 @@ public class InterfaceClient {
 			while (res3.next()) {
 				nbPhoto = res3.getInt(1);
 
-				System.out.println("le nombre de photo : "+ nbPhoto);
+				System.out.println("le nombre de photo : " + nbPhoto);
 			}
 
 			int prixCommande = quantite * prixUnitaire * nbPhoto;
@@ -723,7 +718,27 @@ public class InterfaceClient {
 
 	private void verifListeSuppImage() {
 		try {
-			PreparedStatement req = conn.prepareStatement("select ");
+			int idI;
+			PreparedStatement req = conn.prepareStatement("select idI from ListeSuppImage where nbImage = 0");
+			ResultSet res = req.executeQuery();
+			while (res.next()) {
+				idI = res.getInt(1);
+
+				req = conn.prepareStatement("delete from ListeSuppImage where idI = ?");
+				req.setInt(1, idI);
+				req.executeQuery();
+
+				req = conn.prepareStatement("delete from photo where idI = ?");
+				req.setInt(1, idI);
+				req.executeQuery();
+
+				req = conn.prepareStatement("delete from image where idI = ?");
+				req.setInt(1, idI);
+				req.executeQuery();
+				System.out.println("L'image " + idI + " est supprimee !! ");
+				conn.commit();
+			}
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 			try {
@@ -732,6 +747,53 @@ public class InterfaceClient {
 				e1.printStackTrace();
 			}
 		}
+	}
+
+	public void SupprimerPhoto(int idPhoto, String mail) {
+		try {
+			String mailc = null;
+			PreparedStatement p = conn
+					.prepareStatement("select mailclient from image natural join photo where idPhoto = ?");
+			p.setInt(1, idPhoto);
+			ResultSet verif = p.executeQuery();
+			while (verif.next())
+				mailc = verif.getString(1);
+			if (mailc.equals(mail)) {
+				PreparedStatement req = conn.prepareStatement("delete from photo where idPhoto = ?");
+				req.setInt(1, idPhoto);
+				req.executeQuery();
+				System.out.println("La photo est bien supprimmee de l'album !!");
+				conn.commit();
+			} else {
+				System.out.println("Ce n'est pas ta photo !!!!!!");
+
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+	}
+
+	public boolean verifTonAlbum(int idAlbum, String mail) {
+		try {
+			String mailc = null;
+			PreparedStatement p = conn.prepareStatement("select mailclient from album where idAlbum = ? ");
+			p.setInt(1, idAlbum);
+			ResultSet verif = p.executeQuery();
+			while (verif.next())
+				mailc = verif.getString(1);
+			return mailc.equals(mail);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+		
 	}
 
 }

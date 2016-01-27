@@ -112,7 +112,7 @@ public class Connexionsgbd {
 						//client.SupprimerAlbum();
 						break;
 					case 13:
-						//client.SupprimerPhotoAlbum();
+						client.SupprimerPhotoAlbum();
 						break;
 					case 99 :
 						client.deconnecter();

@@ -13,7 +13,8 @@ public class Client {
 		this.interfaceClient = i;
 	}
 
-	public Client(boolean connectee,String mail, String nom, String prenom, String adresse, String mDP,InterfaceClient i) {
+	public Client(boolean connectee, String mail, String nom, String prenom, String adresse, String mDP,
+			InterfaceClient i) {
 		this.connectee = connectee;
 		this.mail = mail;
 		this.nom = nom;
@@ -53,8 +54,6 @@ public class Client {
 		}
 
 	}
-
-	
 
 	public void AjoutImage() {
 		int resolution;
@@ -132,29 +131,32 @@ public class Client {
 			System.out.println("** 2- Hebdomadaire (56 pages)");
 			System.out.println("**********************");
 			int choix = LectureClavier.lireEntier("Choisir le type d'agenda : ");
-			
-			if(choix == 1)
+
+			if (choix == 1)
 				interfaceClient.AjoutAgenda("Journalier", mail);
-			else if(choix ==2)				
+			else if (choix == 2)
 				interfaceClient.AjoutAgenda("Hebdomadaire", mail);
 		}
 	}
-	
+
 	private void AjoutCalendrier() {
 		String typeC;
 
 		System.out.println("--- Creation d'un Calendrier ---");
 
 		int type = LectureClavier.lireEntier("Donner le type du calendrier  : \n1- bureau\n2-mural ");
-		if(type==1)typeC="bureau";else typeC="mural";
+		if (type == 1)
+			typeC = "bureau";
+		else
+			typeC = "mural";
 
 		interfaceClient.AfficheTousImages(mail);
 		int idp = LectureClavier.lireEntier("choisit une photo pour la couverture (Donner l'id ) :");
 
-		interfaceClient.AjoutCalendrier(typeC, idp,mail);
+		interfaceClient.AjoutCalendrier(typeC, idp, mail);
 	}
-	
-	public void CreationCommande(){
+
+	public void CreationCommande() {
 		System.out.println("************ Creation d'une commande ! **************");
 		interfaceClient.CreationCommande(mail);
 	}
@@ -164,23 +166,24 @@ public class Client {
 		System.out.println("Choisir un image de la liste suivante : ");
 		interfaceClient.AfficheTousImages(mail);
 		int idp = LectureClavier.lireEntier("Votre choix ?");
-		
+
 		System.out.println("Choisir un album de la liste : ");
 		interfaceClient.AfficheTousAlbum(mail);
 		int idA = LectureClavier.lireEntier("Votre choix ?");
-		
-		interfaceClient.creerPhoto(idp, idA,mail);
-		
+
+		interfaceClient.creerPhoto(idp, idA, mail);
+
 	};
-	
-public void PartageImage() {
-	System.out.println("--- Partage d'une image ---");	
-	System.out.println("Choisir un image de la liste suivante : ");
-	interfaceClient.AfficheTousImages(mail);
-	int idI = LectureClavier.lireEntier("Votre choix ?");
-	
-	interfaceClient.PartageImage(idI);
+
+	public void PartageImage() {
+		System.out.println("--- Partage d'une image ---");
+		System.out.println("Choisir un image de la liste suivante : ");
+		interfaceClient.AfficheTousImages(mail);
+		int idI = LectureClavier.lireEntier("Votre choix ?");
+
+		interfaceClient.PartageImage(idI);
 	}
+
 	public String getNom() {
 		return nom;
 	}
@@ -215,7 +218,7 @@ public void PartageImage() {
 	}
 
 	public void deconnecter() {
-connectee = false;		
+		connectee = false;
 	}
 
 	public void AjouterLot() {
@@ -228,13 +231,13 @@ connectee = false;
 		quantite = LectureClavier.lireEntier("Combien voulez vous de cet album ?");
 		interfaceClient.afficherTousFormat();
 		idF = LectureClavier.lireEntier("CHoisir le format de l'album : ");
-		
+
 		idS = interfaceClient.TrouverSociete(idF, quantite);
 
 		interfaceClient.ajouterLot(idAlbum, idCom, quantite, idF, idS);
 		interfaceClient.MAJStock(quantite, idS, idF, idAlbum);
 		interfaceClient.MAJPrixTotal(quantite, idS, idF, idCom, idAlbum);
-	
+
 	}
 
 	public void AfficherTousCommande() {
@@ -247,10 +250,9 @@ connectee = false;
 		System.out.println("--- Affichage des photos d'un album choisi ---");
 		AfficheTousAlbums();
 		idAlbum = LectureClavier.lireEntier("Choisir un album (IdA):");
-		
-		interfaceClient.afficheImgAlbum(idAlbum,mail);
-		
-		
+
+		interfaceClient.afficheImgAlbum(idAlbum, mail);
+
 	}
 
 	public void SupprimerImage() {
@@ -258,12 +260,26 @@ connectee = false;
 		System.out.println("Choisir une image de la liste suivante : ");
 		AfficheTousImages();
 		int idI = LectureClavier.lireEntier("Votre choix?");
-		
-		interfaceClient.SupprimerImage(idI,mail);
+
+		interfaceClient.SupprimerImage(idI, mail);
 	}
 
-	
+	public void SupprimerPhotoAlbum() {
+		int idAlbum;
+		System.out.println("--- Suppression d'une photo d'un album ---");
+		AfficheTousAlbums();
+		idAlbum = LectureClavier.lireEntier("Choisir un album (IdA):");
+		if (interfaceClient.verifTonAlbum(idAlbum, mail)) {
+			System.out.println("Choisir une photo de la liste suivante :");
+			interfaceClient.afficheImgAlbum(idAlbum, mail);
+			int idPhoto = LectureClavier.lireEntier("Votre choix?");
 
-	
+			interfaceClient.SupprimerPhoto(idPhoto, mail);
+		} else {
+			System.out.println("Ce n'est pas ton album !!");
+
+		}
+
+	}
 
 }
