@@ -232,7 +232,7 @@ connectee = false;
 		idS = interfaceClient.TrouverSociete(idF, quantite);
 
 		interfaceClient.ajouterLot(idAlbum, idCom, quantite, idF, idS);
-		interfaceClient.MAJStock(quantite, idS, idF);
+		interfaceClient.MAJStock(quantite, idS, idF, idAlbum);
 		interfaceClient.MAJPrixTotal(quantite, idS, idF, idCom, idAlbum);
 	
 	}
