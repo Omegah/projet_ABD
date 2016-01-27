@@ -468,9 +468,9 @@ public class InterfaceClient {
 			}
 		}
 
-	public int TrouverSociété(int idF, int quantite) {
+	public int TrouverSociete(int idF, int quantite) {
 		try{
-			int idS;
+			int idS = 0;
 			PreparedStatement req = conn.prepareStatement(""
 					+ "select ids "
 					+ "from formatSociete "
@@ -486,11 +486,116 @@ public class InterfaceClient {
 				idS = res.getInt(1);
 				System.out.println("la societe "+idS+" s'occupera du lot");
 			}
+			return idS;
 			}catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 				}
 		return 0;
+	}
+
+	public void ajouterLot(int idAlbum, int idCom, int quantite, int idF,
+			int idS) {
+		try {
+			Statement stmt = conn.createStatement();
+
+			PreparedStatement req = conn.prepareStatement("select count(idLot) from lot");
+			ResultSet res = req.executeQuery();
+			int numLot = 0;
+			while (res.next())
+				numLot = res.getInt(1);
+
+			System.out.println("il y a " + numLot + " lots sur la base de donnï¿½es");
+			PreparedStatement st = conn.prepareStatement("insert into Lot values (?,?,?,?,?,?)");
+			st.setInt(1, numLot + 1);
+			st.setInt(2, idCom);
+			st.setInt(3, idAlbum);
+			st.setInt(4, quantite);
+			st.setInt(5, idS);
+			st.setInt(6, idF);
+
+			st.executeQuery();
+			conn.commit();
+			System.out.println("Ajout d'un lot : REUSSI !! ");
+		} catch (SQLException e) {
+			System.out.println("Pb dans BD : ROLLBACK !!");
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+		
+	}
+
+	public void MAJStock(int quantite, int idS, int idF) {
+		try{
+			int nouveauStock = 0;
+			PreparedStatement req = conn.prepareStatement("select stock from formatSociete where idf = ? and ids = ?");
+			req.setInt(1, idF);
+			req.setInt(2, idS);
+			ResultSet res = req.executeQuery();
+			while (res.next()){
+				nouveauStock = res.getInt(1);
+				System.out.println("la societe à un stock de "+nouveauStock);
+			}
+			nouveauStock = nouveauStock - quantite;
+			PreparedStatement req2 = conn.prepareStatement("UPDATE formatSociete SET Stock=? WHERE idF=? and idS =?");
+			req2.setInt(1, nouveauStock);
+			req2.setInt(2, idF);
+			req2.setInt(3, idS);
+			req2.executeQuery();
+			System.out.println("le stock à était mis à jours");
+			conn.commit();
+			}catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				}
+	}
+
+	public void MAJPrixTotal(int quantite, int idS, int idF, int idCom, int idAlbum) {
+		try{
+			int prixUnitaire = 0;
+			PreparedStatement req = conn.prepareStatement("select prixunitaire from formatSociete where idf = ? and ids = ?");
+			req.setInt(1, idF);
+			req.setInt(2, idS);
+			ResultSet res = req.executeQuery();
+			while (res.next()){
+				prixUnitaire = res.getInt(1);
+				System.out.println("le prix unitaire est de "+prixUnitaire);
+			}
+			int nbPhoto = 0;
+			PreparedStatement req4 = conn.prepareStatement("select count(idA) from Photo where idAlbum = ?");
+			req4.setInt(1, idAlbum);
+			ResultSet res3 = req.executeQuery();
+			while (res3.next()){
+				nbPhoto = res3.getInt(1);
+				System.out.println("le nombre de photo : "+prixUnitaire);
+			}
+			
+			int prixCommande = quantite * prixUnitaire * nbPhoto;
+			int prixTotal = 0;
+			PreparedStatement req2 = conn.prepareStatement("select prixtotal from commande where idcom = ?");
+			req.setInt(1, idCom);
+			ResultSet res2 = req.executeQuery();
+			while (res2.next()){
+				prixTotal = res2.getInt(1);
+				System.out.println("le prix unitaire est de "+prixUnitaire);
+			}
+			prixTotal = prixTotal + prixCommande;
+			
+			PreparedStatement req3 = conn.prepareStatement("UPDATE Commande SET prixTotal=? WHERE idcom=?");
+			req3.setInt(1, prixTotal);
+			req3.setInt(2, idCom);
+			req3.executeQuery();
+			System.out.println("le prix de la commande a été mis à jours");
+			conn.commit();
+			}catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+				}
 	}	
 	
 }
