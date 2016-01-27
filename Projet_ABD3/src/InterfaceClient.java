@@ -314,7 +314,7 @@ public class InterfaceClient {
 				System.out.println(idA + "   |    "+ nbPhoto);
 			}
 			PreparedStatement req2 = conn.prepareStatement(
-					"select idAlbum, count(idPhoto) from album natural join livre natural join Photo where mailClient = ? group by idAlbum");
+					"select idAlbum, count(idPhoto) from album natural join livre natural left outer join Photo where mailClient = ? group by idAlbum");
 			req2.setString(1, mail);
 			System.out.println("** Livre **");
 			System.out.println("idAlbum | nombre de photo");
@@ -325,7 +325,7 @@ public class InterfaceClient {
 				System.out.println(idA + "   |   " + nbPhoto);
 			}
 			PreparedStatement req3 = conn.prepareStatement(
-					"select idAlbum, count(idPhoto) from album natural join Calendrier natural join Photo where mailClient = ? group by idAlbum");
+					"select idAlbum, count(idPhoto) from album natural join Calendrier natural left outer join Photo where mailClient = ? group by idAlbum");
 			req3.setString(1, mail);
 			System.out.println("** Calendrier **");
 			System.out.println("idAlbum | nombre de photo");
@@ -336,7 +336,7 @@ public class InterfaceClient {
 				System.out.println(idA + "   |   " + nbPhoto);
 			}
 			PreparedStatement req4 = conn.prepareStatement(
-					"select idAlbum, count(idPhoto) from album natural join Agenda natural join Photo where mailClient = ? group by idAlbum");
+					"select idAlbum, count(idPhoto) from album natural join Agenda natural left outer join Photo where mailClient = ? group by idAlbum");
 			req4.setString(1, mail);
 			System.out.println("** Agenda **");
 			System.out.println("idAlbum | nombre de photo");
@@ -366,7 +366,7 @@ public class InterfaceClient {
 			System.out.flush();
 			String titreP = LectureClavier.lireChaine();
 
-			int numPage = LectureClavier.lireEntier("Donner le numero de la page dans l'album ");
+			
 
 			System.out.println("Donner une commentaire a la photo choisie : ");
 			System.out.flush();
@@ -377,10 +377,17 @@ public class InterfaceClient {
 			int numPhoto = 0;
 			while (res.next())
 				numPhoto = res.getInt(1);
+			PreparedStatement req2 = conn.prepareStatement("select max(numpage) from Photo where idAlbum = ?");
+			req2.setInt(1, idAlbum);
+			ResultSet res2 = req2.executeQuery();
+			int numPage = 0;
+			while (res2.next())
+				numPage = res2.getInt(1);
+			
 			PreparedStatement req1 = conn.prepareStatement("insert into Photo values (?,?,?,?,?,?)");
 			req1.setInt(1, numPhoto + 1);
 			req1.setString(2, titreP);
-			req1.setInt(3, numPage);
+			req1.setInt(3, numPage + 1);
 			req1.setInt(4, idAlbum);
 			req1.setInt(5, idI);
 			req1.setString(6, comment);
@@ -548,6 +555,8 @@ public class InterfaceClient {
 			st.setInt(6, idF);
 
 			st.executeQuery();
+			
+			CreationLivraison(numLot+1);
 			conn.commit();
 			System.out.println("Ajout d'un lot : REUSSI !! ");
 		} catch (SQLException e) {
@@ -563,7 +572,36 @@ public class InterfaceClient {
 		
 	}
 
-	public void MAJStock(int quantite, int idS, int idF) {
+	private void CreationLivraison(int idLot) {
+		try {
+			Statement stmt = conn.createStatement();
+
+			PreparedStatement req = conn.prepareStatement("select max(idlivraison) from Livraison");
+			ResultSet res = req.executeQuery();
+			int numLivraison = 0;
+			while (res.next())
+				numLivraison = res.getInt(1);
+
+			System.out.println("il y a " + numLivraison + " commandes sur la base de donnï¿½es");
+			PreparedStatement st = conn.prepareStatement("insert into livraison values (?,?,?)");
+			st.setInt(1, numLivraison + 1);
+			st.setInt(2, idLot);
+			st.setString(3, "en cours");
+			st.executeQuery();
+			System.out.println("Ajout d'une commande : REUSSI !! ");
+		} catch (SQLException e) {
+			System.out.println("Pb dans BD : ROLLBACK !!");
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
+	}
+
+	public void MAJStock(int quantite, int idS, int idF, int idAlbum) {
 		try{
 			int nouveauStock = 0;
 			PreparedStatement req = conn.prepareStatement("select stock from formatSociete where idf = ? and ids = ?");
@@ -574,7 +612,17 @@ public class InterfaceClient {
 				nouveauStock = res.getInt(1);
 				System.out.println("la societe à un stock de "+nouveauStock);
 			}
-			nouveauStock = nouveauStock - quantite;
+			
+			int nbPhoto = 0;
+			PreparedStatement req4 = conn.prepareStatement("select count(idAlbum) from Photo where idAlbum = ?");
+			req4.setInt(1, idAlbum);
+			ResultSet res3 = req4.executeQuery();
+			while (res3.next()){
+				nbPhoto = res3.getInt(1);
+				System.out.println("le nombre de photo : "+ nbPhoto);
+			}
+			
+			nouveauStock = nouveauStock - quantite* nbPhoto;
 			PreparedStatement req2 = conn.prepareStatement("UPDATE formatSociete SET Stock=? WHERE idF=? and idS =?");
 			req2.setInt(1, nouveauStock);
 			req2.setInt(2, idF);
@@ -582,10 +630,17 @@ public class InterfaceClient {
 			req2.executeQuery();
 			System.out.println("le stock à était mis à jours");
 			conn.commit();
-			}catch (SQLException e1) {
-				// TODO Auto-generated catch block
+		} catch (SQLException e) {
+			System.out.println("Pb dans BD : ROLLBACK !!");
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block-/*87564210
 				e1.printStackTrace();
-				}
+				
+			}
+		}
 	}
 
 	public void MAJPrixTotal(int quantite, int idS, int idF, int idCom, int idAlbum) {
@@ -600,12 +655,12 @@ public class InterfaceClient {
 				System.out.println("le prix unitaire est de "+prixUnitaire);
 			}
 			int nbPhoto = 0;
-			PreparedStatement req4 = conn.prepareStatement("select count(idA) from Photo where idAlbum = ?");
+			PreparedStatement req4 = conn.prepareStatement("select count(idAlbum) from Photo where idAlbum = ?");
 			req4.setInt(1, idAlbum);
-			ResultSet res3 = req.executeQuery();
+			ResultSet res3 = req4.executeQuery();
 			while (res3.next()){
 				nbPhoto = res3.getInt(1);
-				System.out.println("le nombre de photo : "+prixUnitaire);
+				System.out.println("le nombre de photo : "+ nbPhoto);
 			}
 			
 			int prixCommande = quantite * prixUnitaire * nbPhoto;
@@ -625,10 +680,15 @@ public class InterfaceClient {
 			req3.executeQuery();
 			System.out.println("le prix de la commande a été mis à jours");
 			conn.commit();
-			}catch (SQLException e1) {
+			} catch (SQLException e) {
+			System.out.println("Pb dans BD : ROLLBACK !!");
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-				}
+			}
+		}	
 	}	
-	
 }
