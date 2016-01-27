@@ -158,7 +158,7 @@ public class InterfaceClient {
 			req1.setInt(1, numAlbum);
 			req1.setString(2, preface);
 			req1.setString(3, postface);
-			idPC = creerPhoto(idI, numAlbum);
+			idPC = creerPhoto(idI, numAlbum, mailC);
 			req1.setInt(4, idPC);
 			req1.setString(5, titreL);
 
@@ -194,7 +194,7 @@ public class InterfaceClient {
 			PreparedStatement req1 = conn.prepareStatement("insert into Calendrier values (?,?,?)");
 			req1.setInt(1, numAlbum);
 			req1.setString(2, typeC);
-			idPC = creerPhoto(idp, numAlbum);
+			idPC = creerPhoto(idp, numAlbum, mailC);
 			req1.setInt(3, idPC);
 
 			req1.executeQuery();
@@ -244,14 +244,15 @@ public class InterfaceClient {
 			}
 		}
 	}
+
 	public void PartageImage(int idI) {
-		try{
+		try {
 			PreparedStatement req = conn.prepareStatement("update image set partage = 1 where idI =  ? ");
 			req.setInt(1, idI);
 			req.executeQuery();
 			conn.commit();
 			System.out.println("Partage de l'image : REUSSI !!");
-		}catch (SQLException e) {
+		} catch (SQLException e) {
 			System.out.println("Pb dans BD : ROLLBACK !!");
 			e.printStackTrace();
 			try {
@@ -269,7 +270,7 @@ public class InterfaceClient {
 
 	public void AfficheTousImages(String mailC) {
 		try {
-			//Statement stmt = conn.createStatement();
+			// Statement stmt = conn.createStatement();
 			int idI, resolution;
 			String URL, mail, info;
 			boolean partage;
@@ -302,7 +303,7 @@ public class InterfaceClient {
 		try {
 			Statement stmt = conn.createStatement();
 			int idA;
-			String titreL,typeC,typeA;
+			String titreL, typeC, typeA;
 			boolean partage;
 			PreparedStatement req = conn.prepareStatement(
 					"select idAlbum from album where mailClient Like ? minus (select idAlbum from album natural join Livre natural join Calendrier natural join Agenda where mailClient = ?)");
@@ -321,34 +322,36 @@ public class InterfaceClient {
 			System.out.println("\n** Tous les livres **");
 			System.out.println("idAlbum   | titreLivre ");
 			res = req.executeQuery();
-			while(res.next()){
+			while (res.next()) {
 				idA = res.getInt(1);
 				titreL = res.getString(2);
-				System.out.println(idA+" | "+titreL);
+				System.out.println(idA + " | " + titreL);
 			}
-			
-			req = conn.prepareStatement("select idAlbum,typeCalendrier from Calendrier natural join album where mailClient = ?");
+
+			req = conn.prepareStatement(
+					"select idAlbum,typeCalendrier from Calendrier natural join album where mailClient = ?");
 			req.setString(1, mail);
 			System.out.println("\n** Tous les calendriers **");
 			System.out.println("idA | typeCalendrier");
 			res = req.executeQuery();
-			while(res.next()){
+			while (res.next()) {
 				idA = res.getInt(1);
 				typeC = res.getString(2);
-				System.out.println(idA+" | "+typeC);
+				System.out.println(idA + " | " + typeC);
 			}
-			
-			req = conn.prepareStatement("select idAlbum,typeAgenda from Agenda natural join album where mailClient = ?");
+
+			req = conn
+					.prepareStatement("select idAlbum,typeAgenda from Agenda natural join album where mailClient = ?");
 			req.setString(1, mail);
 			System.out.println("\n** Tous les agendass **");
 			System.out.println("idA | typeAgenda");
 			res = req.executeQuery();
-			while(res.next()){
+			while (res.next()) {
 				idA = res.getInt(1);
 				typeA = res.getString(2);
-				System.out.println(idA+" | "+typeA);
+				System.out.println(idA + " | " + typeA);
 			}
-			
+
 			System.out.println("\n \n");
 		} catch (SQLException e) {
 			System.out.println("Pb dans BD : ROLLBACK !!");
@@ -360,36 +363,48 @@ public class InterfaceClient {
 	// Creer une photo de l'image i : Photo(idPhoto, titrePhoto,numPage,
 	// #idAlbum, #idI, commentaire)
 
-	public int creerPhoto(int idI, int idAlbum) {
+	public int creerPhoto(int idI, int idAlbum, String mail) {
 		try {
-			System.out.println("Information de la photo ");
-			System.out.println("Donner un titre a la photo choisie : ");
-			System.out.flush();
-			String titreP = LectureClavier.lireChaine();
+			String mailc = null;
+			PreparedStatement p = conn.prepareStatement("select mailclient from album where idAlbum = ? ");
+			p.setInt(1, idAlbum);
+			ResultSet verif = p.executeQuery();
+			while (verif.next())
+				mailc = verif.getString(1);
+			if (mailc.equals(mail)) {
+				System.out.println("Information de la photo ");
+				System.out.println("Donner un titre a la photo choisie : ");
+				System.out.flush();
+				String titreP = LectureClavier.lireChaine();
 
-			int numPage = LectureClavier.lireEntier("Donner le numero de la page dans l'album ");
+				int numPage = LectureClavier.lireEntier("Donner le numero de la page dans l'album ");
 
-			System.out.println("Donner une commentaire a la photo choisie : ");
-			System.out.flush();
-			String comment = LectureClavier.lireChaine();
+				System.out.println("Donner une commentaire a la photo choisie : ");
+				System.out.flush();
+				String comment = LectureClavier.lireChaine();
 
-			PreparedStatement req = conn.prepareStatement("select max(idPhoto) from Photo");
-			ResultSet res = req.executeQuery();
-			int numPhoto = 0;
-			while (res.next())
-				numPhoto = res.getInt(1);
-			PreparedStatement req1 = conn.prepareStatement("insert into Photo values (?,?,?,?,?,?)");
-			req1.setInt(1, numPhoto + 1);
-			req1.setString(2, titreP);
-			req1.setInt(3, numPage);
-			req1.setInt(4, idAlbum);
-			req1.setInt(5, idI);
-			req1.setString(6, comment);
+				PreparedStatement req = conn.prepareStatement("select max(idPhoto) from Photo");
+				ResultSet res = req.executeQuery();
+				int numPhoto = 0;
+				while (res.next())
+					numPhoto = res.getInt(1);
+				PreparedStatement req1 = conn.prepareStatement("insert into Photo values (?,?,?,?,?,?)");
+				req1.setInt(1, numPhoto + 1);
+				req1.setString(2, titreP);
+				req1.setInt(3, numPage);
+				req1.setInt(4, idAlbum);
+				req1.setInt(5, idI);
+				req1.setString(6, comment);
 
-			req1.executeQuery();
-			conn.commit();
-			System.out.println("Creation de la photo : REUSSI !!");
-			return numPhoto;
+				req1.executeQuery();
+				conn.commit();
+				System.out.println("Ajout de la photo : REUSSI !!");
+				return numPhoto;
+			} else {
+				System.out.println("Ce n'est pas ton album  !!");
+
+			}
+
 		} catch (SQLException e) {
 			System.out.println("Pb dans BD : ROLLBACK !!");
 			e.printStackTrace();
@@ -425,6 +440,7 @@ public class InterfaceClient {
 			e1.printStackTrace();
 		}
 	}
+
 	public void CreationCommande(String mail) {
 		// TODO Auto-generated method stub
 		try {
@@ -460,97 +476,240 @@ public class InterfaceClient {
 
 	public void afficherTousCommande(String mail) {
 		// TODO Auto-generated method stub
-		try{
+		try {
 			String mailCLient, statut;
 			int idCom, prixTotal;
-			PreparedStatement req = conn.prepareStatement("select idCom, PrixTotal, statutCommande from Commande where mailclient = ?");
+			PreparedStatement req = conn
+					.prepareStatement("select idCom, PrixTotal, statutCommande from Commande where mailclient = ?");
 			req.setString(1, mail);
 			ResultSet res = req.executeQuery();
 			System.out.println("-- La liste des clients -- ");
 			System.out.println("idCom | prixTotal | statut ");
-			while (res.next()){
+			while (res.next()) {
 				idCom = res.getInt(1);
 				prixTotal = res.getInt(2);
 				statut = res.getString(3);
-				System.out.println(idCom+" | "+prixTotal+" | "+ statut);
+				System.out.println(idCom + " | " + prixTotal + " | " + statut);
 			}
-			}catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 	}
 
 	public void afficherTousFormat() {
-	// TODO Auto-generated method stub
-	try{
-		String taille, libelle;
-		int idF, nbPixel;
-		PreparedStatement req = conn.prepareStatement("select idF, taille, nbPixel, libelle from Format");
-		ResultSet res = req.executeQuery();
-		System.out.println("-- La liste des format -- ");
-		System.out.println("idF | taille | nbPixel | libelle ");
-		while (res.next()){
-			idF = res.getInt(1);
-			taille = res.getString(2);
-			nbPixel = res.getInt(3);
-			libelle = res.getString(4);
-			System.out.println(idF+" | "+taille+" | "+nbPixel+" | "+ libelle);
-		}
-		}catch (SQLException e1) {
+		// TODO Auto-generated method stub
+		try {
+			String taille, libelle;
+			int idF, nbPixel;
+			PreparedStatement req = conn.prepareStatement("select idF, taille, nbPixel, libelle from Format");
+			ResultSet res = req.executeQuery();
+			System.out.println("-- La liste des format -- ");
+			System.out.println("idF | taille | nbPixel | libelle ");
+			while (res.next()) {
+				idF = res.getInt(1);
+				taille = res.getString(2);
+				nbPixel = res.getInt(3);
+				libelle = res.getString(4);
+				System.out.println(idF + " | " + taille + " | " + nbPixel + " | " + libelle);
+			}
+		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
-			}
 		}
+	}
 
 	public int TrouverSociete(int idF, int quantite) {
-		try{
-			int idS;
-			PreparedStatement req = conn.prepareStatement(""
-					+ "select ids "
-					+ "from formatSociete "
-					+ "where idf = ? and prixunitaire = ("
-					+ "select min(prixunitaire) "
-					+ "from formatsociete "
-					+ "where stock >= ? and idf = ?)");
+		try {
+			int idS = 0;
+			PreparedStatement req = conn
+					.prepareStatement("" + "select ids " + "from formatSociete " + "where idf = ? and prixunitaire = ("
+							+ "select min(prixunitaire) " + "from formatsociete " + "where stock >= ? and idf = ?)");
 			req.setInt(1, idF);
 			req.setInt(2, quantite);
 			req.setInt(3, idF);
 			ResultSet res = req.executeQuery();
-			while (res.next()){
+			while (res.next()) {
 				idS = res.getInt(1);
-				System.out.println("la societe "+idS+" s'occupera du lot");
+				System.out.println("la societe " + idS + " s'occupera du lot");
 			}
-			}catch (SQLException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-				}
-		return 0;
-	}
-	// je suis un connardee]
-	
-	public void afficheImgAlbum(int idAlbum,String mail) {
-		try{
-		int idP,numP,idA,idI;
-		String titreP,comment;
-		PreparedStatement req = conn.prepareStatement("select  idPhoto,titrePhoto,numPage,idAlbum,idI,commentaire from photo natural join Album where mailclient = ?");
-		req.setString(1, mail);
-		
-		ResultSet res = req.executeQuery();
-		System.out.println("idPhoto | titre Photo | numPage | idAlbum | idI | commentaire");
-		while(res.next()){
-			idP = res.getInt(1);
-			titreP = res.getString(2);
-			numP = res.getInt(3);
-			idA = res.getInt(4);
-			idI = res.getInt(5);
-			comment = res.getString(6);
-			System.out.println(idP +" | "+ titreP+" | "+ numP+" | "+idA+" | "+idI+" | "+comment);
-		}
-		
-		}catch (SQLException e1) {
+			return idS;
+		} catch (SQLException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
+		}
+		return 0;
+	}
+
+	public void afficheImgAlbum(int idAlbum, String mail) {
+		try {
+			int idP, numP, idA, idI;
+			String titreP, comment;
+			PreparedStatement req = conn.prepareStatement(
+					"select  idPhoto,titrePhoto,numPage,idAlbum,idI,commentaire from photo natural join Album where mailclient = ?");
+			req.setString(1, mail);
+
+			ResultSet res = req.executeQuery();
+			System.out.println("idPhoto | titre Photo | numPage | idAlbum | idI | commentaire");
+			while (res.next()) {
+				idP = res.getInt(1);
+				titreP = res.getString(2);
+				numP = res.getInt(3);
+				idA = res.getInt(4);
+				idI = res.getInt(5);
+				comment = res.getString(6);
+				System.out.println(idP + " | " + titreP + " | " + numP + " | " + idA + " | " + idI + " | " + comment);
 			}
-	}	
-	
+
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+	}
+
+	public void ajouterLot(int idAlbum, int idCom, int quantite, int idF, int idS) {
+		try {
+			Statement stmt = conn.createStatement();
+
+			PreparedStatement req = conn.prepareStatement("select count(idLot) from lot");
+			ResultSet res = req.executeQuery();
+			int numLot = 0;
+			while (res.next())
+				numLot = res.getInt(1);
+
+			System.out.println("il y a " + numLot + " lots sur la base de donn�es");
+			PreparedStatement st = conn.prepareStatement("insert into Lot values (?,?,?,?,?,?)");
+			st.setInt(1, numLot + 1);
+			st.setInt(2, idCom);
+			st.setInt(3, idAlbum);
+			st.setInt(4, quantite);
+			st.setInt(5, idS);
+			st.setInt(6, idF);
+
+			st.executeQuery();
+			conn.commit();
+			System.out.println("Ajout d'un lot : REUSSI !! ");
+		} catch (SQLException e) {
+			System.out.println("Pb dans BD : ROLLBACK !!");
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+
+	}
+
+	public void MAJStock(int quantite, int idS, int idF) {
+		try {
+			int nouveauStock = 0;
+			PreparedStatement req = conn.prepareStatement("select stock from formatSociete where idf = ? and ids = ?");
+			req.setInt(1, idF);
+			req.setInt(2, idS);
+			ResultSet res = req.executeQuery();
+			while (res.next()) {
+				nouveauStock = res.getInt(1);
+				System.out.println("la societe � un stock de " + nouveauStock);
+			}
+			nouveauStock = nouveauStock - quantite;
+			PreparedStatement req2 = conn.prepareStatement("UPDATE formatSociete SET Stock=? WHERE idF=? and idS =?");
+			req2.setInt(1, nouveauStock);
+			req2.setInt(2, idF);
+			req2.setInt(3, idS);
+			req2.executeQuery();
+			System.out.println("le stock � �tait mis � jours");
+			conn.commit();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+	}
+
+	public void MAJPrixTotal(int quantite, int idS, int idF, int idCom, int idAlbum) {
+		try {
+			int prixUnitaire = 0;
+			PreparedStatement req = conn
+					.prepareStatement("select prixunitaire from formatSociete where idf = ? and ids = ?");
+			req.setInt(1, idF);
+			req.setInt(2, idS);
+			ResultSet res = req.executeQuery();
+			while (res.next()) {
+				prixUnitaire = res.getInt(1);
+				System.out.println("le prix unitaire est de " + prixUnitaire);
+			}
+			int nbPhoto = 0;
+			PreparedStatement req4 = conn.prepareStatement("select count(idA) from Photo where idAlbum = ?");
+			req4.setInt(1, idAlbum);
+			ResultSet res3 = req.executeQuery();
+			while (res3.next()) {
+				nbPhoto = res3.getInt(1);
+				System.out.println("le nombre de photo : " + prixUnitaire);
+			}
+
+			int prixCommande = quantite * prixUnitaire * nbPhoto;
+			int prixTotal = 0;
+			PreparedStatement req2 = conn.prepareStatement("select prixtotal from commande where idcom = ?");
+			req.setInt(1, idCom);
+			ResultSet res2 = req.executeQuery();
+			while (res2.next()) {
+				prixTotal = res2.getInt(1);
+				System.out.println("le prix unitaire est de " + prixUnitaire);
+			}
+			prixTotal = prixTotal + prixCommande;
+
+			PreparedStatement req3 = conn.prepareStatement("UPDATE Commande SET prixTotal=? WHERE idcom=?");
+			req3.setInt(1, prixTotal);
+			req3.setInt(2, idCom);
+			req3.executeQuery();
+			System.out.println("le prix de la commande a �t� mis � jours");
+			conn.commit();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
+
+	}
+
+	public void SupprimerImage(int idI, String mail) {
+		try {
+			int c = 0;
+			PreparedStatement req = conn.prepareStatement(
+					"select count(idPhoto) from Lot natural join album natural join Photo  natural join image where idI = ?");
+			req.setInt(1, idI);
+			ResultSet res = req.executeQuery();
+			while (res.next()) {
+				c = res.getInt(1);
+			}
+
+			req = conn.prepareStatement("insert into ListeSuppImage values (?,?)");
+			req.setInt(1, idI);
+			req.setInt(2, c);
+
+			res = req.executeQuery();
+			System.out.println("-- L'image est dans transfere dans la liste d'attente ");
+			verifListeSuppImage();
+			conn.commit();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+
+	private void verifListeSuppImage() {
+		try {
+			PreparedStatement req = conn.prepareStatement("select ");
+		} catch (SQLException e) {
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+			}
+		}
+	}
+
 }

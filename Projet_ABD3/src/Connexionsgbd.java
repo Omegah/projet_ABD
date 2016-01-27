@@ -89,6 +89,9 @@ public class Connexionsgbd {
 					case 5 :
 						client.AjoutPhotoAlbum();
 						break;
+					case 6:
+						client.AfficherTousCommande();
+						break;
 					case 7 :
 							client.CreationCommande();
 							break;
@@ -101,6 +104,15 @@ public class Connexionsgbd {
 						break;
 					case 10 :
 						client.AfficheImgAlbum();
+						break;
+					case 11 : 
+						client.SupprimerImage();
+						break;
+					case 12 :
+						//client.SupprimerAlbum();
+						break;
+					case 13:
+						//client.SupprimerPhotoAlbum();
 						break;
 					case 99 :
 						client.deconnecter();
@@ -168,8 +180,10 @@ public class Connexionsgbd {
 						String libelle = LectureClavier.lireChaine();
 
 						interfaceGestion.ajouterFormat(taille, nbPixel, libelle);
-					case 9 : //9- 
-						
+					case 9 : //9- Supprimer un client
+						System.out.println("Renseignez le mail du client : ");
+						String mail = LectureClavier.lireChaine();
+						interfaceGestion.supprimerClient(mail);
 						break;
 					case 10 :  // 10 Deconnecter
 						

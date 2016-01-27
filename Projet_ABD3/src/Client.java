@@ -169,7 +169,7 @@ public class Client {
 		interfaceClient.AfficheTousAlbum(mail);
 		int idA = LectureClavier.lireEntier("Votre choix ?");
 		
-		interfaceClient.creerPhoto(idp, idA);
+		interfaceClient.creerPhoto(idp, idA,mail);
 		
 	};
 	
@@ -230,10 +230,14 @@ connectee = false;
 		idF = LectureClavier.lireEntier("CHoisir le format de l'album : ");
 		
 		idS = interfaceClient.TrouverSociete(idF, quantite);
-		
+
+		interfaceClient.ajouterLot(idAlbum, idCom, quantite, idF, idS);
+		interfaceClient.MAJStock(quantite, idS, idF);
+		interfaceClient.MAJPrixTotal(quantite, idS, idF, idCom, idAlbum);
+	
 	}
 
-	private void AfficherTousCommande() {
+	public void AfficherTousCommande() {
 		// TODO Auto-generated method stub
 		interfaceClient.afficherTousCommande(mail);
 	}
@@ -247,6 +251,15 @@ connectee = false;
 		interfaceClient.afficheImgAlbum(idAlbum,mail);
 		
 		
+	}
+
+	public void SupprimerImage() {
+		System.out.println("--- Suppression d'une image ---");
+		System.out.println("Choisir une image de la liste suivante : ");
+		AfficheTousImages();
+		int idI = LectureClavier.lireEntier("Votre choix?");
+		
+		interfaceClient.SupprimerImage(idI,mail);
 	}
 
 	
