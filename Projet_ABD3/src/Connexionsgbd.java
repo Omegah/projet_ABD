@@ -284,7 +284,7 @@ public class Connexionsgbd {
 						.println("Renseignez le nom du prestataire: ");
 						String nom9 = LectureClavier.lireChaine();
 						int idf = LectureClavier
-						.lireEntier("Renseignez le stock pour ce format : ");
+						.lireEntier("Renseignez l'identifiant du format : ");
 						float prixu = LectureClavier
 						.lireFloat("Renseignez  le prix Unitaire pour ce format : ");
 						interfaceGestion.modfitPrixUnitaireFormat(nom9, prixu,idf);
