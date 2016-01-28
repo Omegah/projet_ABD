@@ -43,9 +43,13 @@ public class Menu {
 		System.out.println("** 8- Ajouter un format general");
 		System.out.println("** 9- Supprimer un client");
 		System.out.println("** 10- Modifier un prestataire");
-
-		System.out.println("** 11- Deconnecter");
-		System.out.println("** 99- Quitter l'application");
+		System.out.println("** 11- Modifier le statut d'une commande");
+		System.out.println("** 12- Modifier le statut d'une livraison ");
+		System.out.println("** 13- Afficher les commandes");
+		System.out.println("** 14- Afficher les livraisons");
+		System.out.println("** 15- Afficher Liste de suppression des images");
+		System.out.println("** 99- Deconnecter");
+		System.out.println("** 999- Quitter l'application");
 		System.out.println("***********************************************");
 	}
 	

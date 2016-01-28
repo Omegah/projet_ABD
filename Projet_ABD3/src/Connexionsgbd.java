@@ -65,6 +65,7 @@ public class Connexionsgbd {
 						break;
 					case 3:
 						// Creation admin avec interface client ?
+						admin =1;
 						break;
 					case 4:
 						// Affichage de tous les clients
@@ -231,10 +232,47 @@ public class Connexionsgbd {
 								adresse2, pref2, delai2);
 						;
 						break;
-					case 11: // 10 Deconnecter
+					case 11:
+						String statut;
+						interfaceGestion.AfficherCommande();
+						int idCom = LectureClavier.lireEntier("Choisir une commande : ");
+						int c = LectureClavier.lireEntier("Choisir un statut : \n 1- envoie complet \n 2- annule");
+						 if(c==1)statut="envoie complet";
+						else if(c==2)statut="annule";
+						else statut = "";
+						if(statut.isEmpty()){
+							System.out.println("statut pas defini !!");
+						}else{
+							interfaceGestion.changerStatutCommande(idCom, statut);
+						}
+						break;
+					case 12 :
+						interfaceGestion.AfficherLivraison();
+						int idL = LectureClavier.lireEntier("Choisir une livraison :");
+						 c = LectureClavier.lireEntier("Choisir un statut :\n1- en cours \n 2- envoye \n 3- annule");
+						if(c==1)statut="en cours";
+						else if(c==2)statut="envoye";
+						else if(c==3)statut="annule";
+						else statut = "";
+						if(statut.isEmpty()){
+							System.out.println("statut pas defini !!");
+						}else{
+							interfaceGestion.changerStatutLivraison(idL, statut);
+						}
+						break;
+					case 13:
+						interfaceGestion.AfficherCommande();
+						break;
+					case 14:
+						interfaceGestion.AfficherLivraison();
+						break;
+					case 15 :
+						interfaceGestion.afficherListeSuppImg();
+						break;
+					case 99: // 10 Deconnecter
 						admin = 0;
 						break;
-					case 99: // 99- Quitter l'application
+					case 999: // 99- Quitter l'application
 						System.exit(0);
 						;
 						break;
