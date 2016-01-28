@@ -614,6 +614,7 @@ public class InterfaceClient {
 	public void ajouterLot(int idAlbum, int idCom, int quantite, int idF,
 			int idS) {
 		try {
+//			conn.setTransactionIsolation(Connection.TRANSACTION_SERIALIZABLE);
 			Statement stmt = conn.createStatement();
 
 			PreparedStatement req = conn
