@@ -227,23 +227,8 @@ public class InterfaceGestion {
 	 }
 	 
 	 public void supprimerClient(String mail) throws SQLException {
-		 /*
-		  * Il faut ajouter dans la liste d'attente le client a supprimer 
-		  * si il a des commandes en cours 
-		  * 
-		  * A COMPLETER !
-		  */	 
-		 
-			PreparedStatement req2 = conn.prepareStatement("select count(idCom) from commande where mailClient=? and (statutcommande='envoie partiel' or statutcommande='en cours' )");
-			req2.setString(1,mail);
-			ResultSet res2 = req2.executeQuery();
-			res2.next();
-			int nbCom = res2.getInt(1);
-			req2.close();
-			
-			if (nbCom == 0) {
-				
-				 PreparedStatement req5 = conn.prepareStatement("select idCom from commande where mailclient=?");
+ 		 				
+				 PreparedStatement req5 = conn.prepareStatement("select idCom from commande where mailClient=? and (statutcommande='envoie partiel' or statutcommande='en cours'");
 					req5.setString(1,mail);
 					ResultSet res = req5.executeQuery();
 					
@@ -278,14 +263,10 @@ public class InterfaceGestion {
 					req6.setString(1, mail);
 					req6.executeQuery();	
 					//DESACTIVER COMPTE CLIENT
-					
-					
-					//InterfaceClient ic = new InterfaceClient();
+
 					conn.commit();
 
-			}
-			else {
-
+/*
 				PreparedStatement st2 = conn.prepareStatement("insert into ListeSuppClient values (?,?,?)");
 				st2.setString(1, mail);
 				st2.setInt(2, nbCom);
@@ -293,16 +274,16 @@ public class InterfaceGestion {
 				st2.executeQuery();
 
 				conn.commit();
-				
 				System.out.println("Client: " + mail + "  ajouté a la file d'attente de suppression. ");
+
+	*/			
 				
-				
-				 PreparedStatement req5 = conn.prepareStatement("select idI from Image where mailclient=? ");
-					req5.setString(1,mail);
-					ResultSet res = req5.executeQuery();
+				 PreparedStatement req8 = conn.prepareStatement("select idI from Image where mailclient=? ");
+					req8.setString(1,mail);
+					ResultSet res4 = req8.executeQuery();
 					
 					
-					while(res.next()) {
+					while(res4.next()) {
 						
 						int idI = res.getInt(1);
 						
@@ -319,7 +300,7 @@ public class InterfaceGestion {
 				
 			}
 		 
-	 }
+	 
 	 
 	 private void supprimmerPhotosSansCommande(int idI) throws SQLException  {
 		
