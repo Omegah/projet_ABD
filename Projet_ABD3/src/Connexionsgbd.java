@@ -119,6 +119,12 @@ public class Connexionsgbd {
 					case 13:
 						client.SupprimerPhotoAlbum();
 						break;
+					case 14:
+						client.PayerCommande();
+						break;
+					case 15:
+						client.AfficherLotsCommande();
+						break;
 					case 99 :
 						client.deconnecter();
 						break;
