@@ -302,4 +302,12 @@ public class Client {
 	}
 
 
+	public void PayerCommande() {
+		AfficherTousCommande(); 
+		int idCommande = LectureClavier.lireEntier("Quelle commande voulez-vous payer ?");
+		interfaceClient.PayerCommande(idCommande,mail);
+		
+	}
+
+
 }
