@@ -65,6 +65,7 @@ public class Connexionsgbd {
 						break;
 					case 3:
 						// Creation admin avec interface client ?
+						admin = 1;
 						break;
 					case 4:
 						// Affichage de tous les clients
@@ -183,6 +184,8 @@ public class Connexionsgbd {
 						nom6 = LectureClavier.lireChaine();
 						int idD2 = LectureClavier
 								.lireEntier("Renseignez l'id du dispositif : ");
+						int idF = LectureClavier
+								.lireEntier("Renseignez l'id du format : ");
 						int stock = LectureClavier
 								.lireEntier("Renseignez le stock pour ce format : ");
 						float prixU = LectureClavier
@@ -190,8 +193,7 @@ public class Connexionsgbd {
 						int tirageJour = LectureClavier
 								.lireEntier("Renseignez le tirage maximum par jour pour ce format/dispositif : ");
 
-						// interfaceGestion.AjoutFormatSociete(idD2,idF, stock,
-						// prixU, tirageJour, nom6);
+						 interfaceGestion.AjoutFormatSociete(idD2,idF, stock,prixU, tirageJour, nom6);
 						break;
 					case 8: // 8 - Ajouter un Format
 						System.out.println("Renseignez la taille du format : ");
@@ -203,6 +205,7 @@ public class Connexionsgbd {
 
 						interfaceGestion
 								.ajouterFormat(taille, nbPixel, libelle);
+						break;
 					case 9: // 9- Supprimer un client
 						System.out.println("Renseignez le mail du client : ");
 						String mail = LectureClavier.lireChaine();
