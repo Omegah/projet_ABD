@@ -260,9 +260,7 @@ public class InterfaceGestion {
 										PreparedStatement req8 = conn.prepareStatement("delete from livraison where idLot=?");
 										req8.setInt(1, idLot);
 										req8.executeQuery();	
-								}
-							System.out.println("loool");
-							
+								}							
 							
 										PreparedStatement req9 = conn.prepareStatement("delete from Lot where idCom=?");
 										req9.setInt(1, idCom);
@@ -275,37 +273,25 @@ public class InterfaceGestion {
 									
 					
 					}
-				/*
-				PreparedStatement req3 = conn.prepareStatement("delete from Client where mailClient=?");
-				req3.setString(1, mail);
-				req3.executeQuery();
-				conn.commit();
-				System.out.println("Client: " + mail + "  supprimé. ");
-				*/
-				/*	
-					 PreparedStatement req3 = conn.prepareStatement("select idCom from commande where mailclient=?");
-						req3.setString(1,mail);
-						ResultSet res3 = req5.executeQuery();
-						
-		
-						while(res3.next()) {
-							
-							int idCom = res.getInt(1);
-						}
-				*/
+					
+					PreparedStatement req6 = conn.prepareStatement("update client set MDP='gfdgdsfgdfgdf' where mail=?");
+					req6.setString(1, mail);
+					req6.executeQuery();	
+					//DESACTIVER COMPTE CLIENT
+					
+					
+					//InterfaceClient ic = new InterfaceClient();
+					conn.commit();
+
 			}
 			else {
-				System.out.println("laaaal");
 
 				PreparedStatement st2 = conn.prepareStatement("insert into ListeSuppClient values (?,?,?)");
 				st2.setString(1, mail);
 				st2.setInt(2, nbCom);
 				st2.setInt(3, 0);
-				// 	IMAGES -> non partageables   
-				//+ supprimmer PHOTOS (liste d'attente photos)
-				
 				st2.executeQuery();
-				
+
 				conn.commit();
 				
 				System.out.println("Client: " + mail + "  ajouté a la file d'attente de suppression. ");
@@ -328,6 +314,8 @@ public class InterfaceGestion {
 						//req8.setInt(1,idI);
 						//ResultSet res4 = req8.executeQuery();
 					}
+					
+					conn.commit();
 				
 			}
 		 
@@ -357,7 +345,7 @@ public class InterfaceGestion {
 				
 			}
 			insererImageListeSuppp(idI);
-		
+			conn.commit();
 	}
 	 
 	 
@@ -374,6 +362,8 @@ public class InterfaceGestion {
 						req7.executeQuery();	
 					}
 			}
+			conn.commit();
+
 	 }
 
 	 public void changerStatutCommande(int idCom,String statut) throws SQLException {
@@ -381,7 +371,9 @@ public class InterfaceGestion {
 			req1.setString(1,statut);
 			req1.setInt(2,idCom);
 
-			ResultSet res3 = req1.executeQuery();		
+			ResultSet res3 = req1.executeQuery();	
+			conn.commit();
+
 	 }
 	 
 	public void verifListeSuppPrestataire() throws SQLException {
@@ -398,6 +390,7 @@ public class InterfaceGestion {
 				req3.setInt(1, idS);
 				req3.executeQuery();			
 			}
+			conn.commit();
 
 	 }
 	 
@@ -416,6 +409,8 @@ public class InterfaceGestion {
 				req3.setString(1, mail);
 				req3.executeQuery();		
 			}
+			conn.commit();
+
 	 }
 	 	 
 	 public void AfficherPrestataires() throws SQLException {
@@ -430,6 +425,9 @@ public class InterfaceGestion {
 			while (rs.next()) {
 				System.out.println(rs.getString(1) + " : "+ rs.getString(2)+ "");
 			}
+			
+			conn.commit();
+
 			rs.close();
 			stmt.close();
 	 }
@@ -457,6 +455,7 @@ public class InterfaceGestion {
 			while (rs.next()) {
 				System.out.println(rs.getString(2) + " : "+ rs.getString(3)+ ""+ " : "+ rs.getString(4)+ ""+ " : "+ rs.getString(5)+ "");
 			}
+			conn.commit();
 
 			rs.close();
 			req2.close();
