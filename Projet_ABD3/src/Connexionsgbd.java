@@ -121,6 +121,9 @@ public class Connexionsgbd {
 					case 14:
 						client.PayerCommande();
 						break;
+					case 15:
+						client.AfficherLotsCommande();
+						break;
 					case 99 :
 						client.deconnecter();
 						break;

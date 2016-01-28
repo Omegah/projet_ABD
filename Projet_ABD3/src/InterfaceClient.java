@@ -983,4 +983,25 @@ public class InterfaceClient {
 		}
 
 	}
+
+	public void AfficherLotsCommande(int idCommande) {
+		try {
+			int idLot, idAlbum, quantite, idF;
+			PreparedStatement req = conn
+					.prepareStatement("select idLot, idAlbum, Quantite, idF from lot wwhere idCom=?");
+
+			req.setInt(1, idCommande);
+			ResultSet res = req.executeQuery();
+			while(res.next()){
+				idLot = res.getInt(1);
+				idAlbum = res.getInt(2);
+				quantite = res.getInt(3);
+				idF = res.getInt(4);
+				System.out.println(idLot + " |" + idAlbum + " | " + quantite + " | " + idF);
+			}
+			} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}		
+	}
 }

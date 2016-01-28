@@ -310,4 +310,11 @@ public class Client {
 	}
 
 
+	public void AfficherLotsCommande() {
+		AfficherTousCommande(); 
+		int idCommande = LectureClavier.lireEntier("Quelle commande voulez-vous voir ?");
+		interfaceClient.AfficherLotsCommande(idCommande);
+	}
+
+
 }
