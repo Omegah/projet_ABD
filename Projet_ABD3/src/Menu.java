@@ -50,6 +50,8 @@ public class Menu {
 		System.out.println("** 13- Afficher les commandes");
 		System.out.println("** 14- Afficher les livraisons");
 		System.out.println("** 15- Afficher Liste de suppression des images");
+		System.out.println("** 16- Modifier Prix Unitaire d'un format d'un prestataire");
+
 		System.out.println("** 99- Deconnecter");
 		System.out.println("** 999- Quitter l'application");
 		System.out.println("***********************************************");

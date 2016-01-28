@@ -234,6 +234,7 @@ public class Client {
 
 	public void deconnecter() {
 		connectee = false;
+		interfaceClient.supprimerImages(mail);
 	}
 
 	public void AjouterLot() {

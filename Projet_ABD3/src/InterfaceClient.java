@@ -326,7 +326,7 @@ public class InterfaceClient {
 			int idA, nbPhoto;
 
 			PreparedStatement req = conn
-					.prepareStatement("select idAlbum, count(idphoto) from album natural join photo where mailClient Like ? group by idALbum having idalbum not in(select idalbum from livre) and idalbum not in (select idalbum from calendrier) and idalbum not in (select idalbum from agenda)");
+					.prepareStatement("select idAlbum, count(idphoto) from album natural left outer join photo where mailClient = ? group by idALbum having idalbum not in(select idalbum from livre) and idalbum not in (select idalbum from calendrier) and idalbum not in (select idalbum from agenda)");
 
 			req.setString(1, mail);
 			System.out.println("** albums simple **");
@@ -392,13 +392,11 @@ public class InterfaceClient {
 			 * (verif.next()) mailc = verif.getString(1); if
 			 * (mailc.equals(mail)) {
 			 */
+			int numPage = 0;
 			System.out.println("Information de la photo ");
 			System.out.println("Donner un titre a la photo choisie : ");
 			System.out.flush();
 			String titreP = LectureClavier.lireChaine();
-
-			int numPage = LectureClavier
-					.lireEntier("Donner le numero de la page dans l'album ");
 
 			System.out.println("Donner une commentaire a la photo choisie : ");
 			System.out.flush();
@@ -974,8 +972,7 @@ LectureClavier.lireChaine();
 			req.setInt(1, idCommande);
 			req.setString(2, mail);
 			req.executeQuery();
-			System.out
-					.println("Vous venez payer ma commande" + idCommande);
+			System.out.println("Vous venez payer ma commande" + idCommande);
 			conn.commit();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
@@ -998,16 +995,46 @@ LectureClavier.lireChaine();
 
 			req.setInt(1, idCommande);
 			ResultSet res = req.executeQuery();
-			while(res.next()){
+			while (res.next()) {
 				idLot = res.getInt(1);
 				idAlbum = res.getInt(2);
 				quantite = res.getInt(3);
 				idF = res.getInt(4);
-				System.out.println(idLot + " |" + idAlbum + " | " + quantite + " | " + idF);
+				System.out.println(idLot + " |" + idAlbum + " | " + quantite
+						+ " | " + idF);
 			}
-			} catch (SQLException e) {
+		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
+		}
+	}
+
+	public void supprimerImages(String mail) {
+		try {
+			int idI;
+			PreparedStatement req2;
+			PreparedStatement req = conn
+					.prepareStatement("select idI from image where mailclient = ? and idI not in("
+							+ "select idI from photo)");
+
+			req.setString(1, mail);
+			ResultSet res = req.executeQuery();
+			while (res.next()) {
+				idI = res.getInt(1);
+				req2 = conn.prepareStatement("DELETE From image where idI = ?");
+				req2.setInt(1, idI);
+				req2.executeQuery();
+			}
+			conn.commit();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			try {
+				conn.rollback();
+			} catch (SQLException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 	}
 }

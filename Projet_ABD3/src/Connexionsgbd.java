@@ -279,6 +279,16 @@ public class Connexionsgbd {
 					case 15 :
 						interfaceGestion.afficherListeSuppImg();
 						break;
+					case 16 :
+						System.out
+						.println("Renseignez le nom du prestataire: ");
+						String nom9 = LectureClavier.lireChaine();
+						int idf = LectureClavier
+						.lireEntier("Renseignez le stock pour ce format : ");
+						float prixu = LectureClavier
+						.lireFloat("Renseignez  le prix Unitaire pour ce format : ");
+						interfaceGestion.modfitPrixUnitaireFormat(nom9, prixu,idf);
+						break;
 					case 99: // 10 Deconnecter
 						admin = 0;
 						break;
