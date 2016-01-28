@@ -465,6 +465,24 @@ public class InterfaceGestion {
 			conn.commit();
 
 	 }
+	 
+	 public void modfitPrixUnitaireFormat(String societe,float prixu,int idF) throws SQLException {
+	
+			PreparedStatement req = conn.prepareStatement("select idS from societe where nomSociete=?");
+			req.setString(1,societe);
+			ResultSet res = req.executeQuery();
+			res.next();
+			int idS = res.getInt(1);
+			req.close();
+				
+			 	PreparedStatement req1 = conn.prepareStatement("update FormatSociete set prixUnitaire=? where idS=? and idF=?");
+				req1.setFloat(1,prixu);
+				req1.setInt(2,idS);			
+				req1.setInt(3,idF);
+
+				ResultSet res3 = req1.executeQuery();	 
+			 
+	 }
 	 	 
 	 public void AfficherPrestataires() throws SQLException {
 
