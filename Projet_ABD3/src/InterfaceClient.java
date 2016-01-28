@@ -711,7 +711,8 @@ public class InterfaceClient {
 			}
 
 			nouveauStock = nouveauStock - quantite * nbPhoto;
-
+System.out.println("Appuyez sur entree : ");
+LectureClavier.lireChaine();
 			PreparedStatement req2 = conn
 					.prepareStatement("UPDATE formatSociete SET Stock=? WHERE idF=? and idS =?");
 			req2.setInt(1, nouveauStock);
