@@ -106,7 +106,19 @@ public class Connexionsgbd {
 					case 9:
 						client.PartageImage();
 						break;
-					case 99:
+					case 10 :
+						client.AfficheImgAlbum();
+						break;
+					case 11 : 
+						client.SupprimerImage();
+						break;
+					case 12 :
+						//client.SupprimerAlbum();
+						break;
+					case 13:
+						client.SupprimerPhotoAlbum();
+						break;
+					case 99 :
 						client.deconnecter();
 						break;
 					default:

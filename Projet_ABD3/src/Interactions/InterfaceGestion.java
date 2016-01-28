@@ -210,14 +210,14 @@ public class InterfaceGestion {
 		  * A COMPLETER !
 		  */	 
 		 
-			PreparedStatement req2 = conn.prepareStatement("select count(idCom) from commande where mailClient=? and (statutcommande=\"envoie partiel\" or statutcommande=\"en cours\" )");
+			PreparedStatement req2 = conn.prepareStatement("select count(idCom) from commande where mailClient=? and (statutcommande='envoi partiel' or statutcommande='en cours' )");
 			req2.setString(1,mail);
 			ResultSet res2 = req2.executeQuery();
 			res2.next();
 			int nbCom = res2.getInt(1);
 			req2.close();
 			
-			if (nbCom != 0) {
+			if (nbCom == 0) {
 				
 				 PreparedStatement req5 = conn.prepareStatement("select idCom from commande where mailclient=?");
 					req5.setString(1,mail);
@@ -245,33 +245,106 @@ public class InterfaceGestion {
 						req6.setInt(1, idCom);
 						req6.executeQuery();						
 					}
-				
+				/*
 				PreparedStatement req3 = conn.prepareStatement("delete from Client where mailClient=?");
 				req3.setString(1, mail);
 				req3.executeQuery();
 				conn.commit();
-				
 				System.out.println("Client: " + mail + "  supprimé. ");
-
+				*/
+				/*	
+					 PreparedStatement req3 = conn.prepareStatement("select idCom from commande where mailclient=?");
+						req3.setString(1,mail);
+						ResultSet res3 = req5.executeQuery();
+						
+		
+						while(res3.next()) {
+							
+							int idCom = res.getInt(1);
+						}
+				*/
 			}
 			else {
 				PreparedStatement st2 = conn.prepareStatement("insert into ListeSuppClient values (?,?,?)");
 				st2.setString(1, mail);
 				st2.setInt(2, nbCom);
 				st2.setInt(3, 0);
-				// COMPLTER LA PARTIE IMAGES PARTAGES
+				// 	IMAGES -> non partageables   
+				//+ supprimmer PHOTOS (liste d'attente photos)
 				
 				st2.executeQuery();
 				
 				conn.commit();
 				
 				System.out.println("Client: " + mail + "  ajouté a la file d'attente de suppression. ");
+				
+				
+				 PreparedStatement req5 = conn.prepareStatement("select idI from Images where mailclient=? and ");
+					req5.setString(1,mail);
+					ResultSet res = req5.executeQuery();
+					
+					
+					while(res.next()) {
+						
+						int idI = res.getInt(1);
+						
+						PreparedStatement req1 = conn.prepareStatement("update image set partage=0 where idI=?");
+						req1.setInt(1,idI);
+						ResultSet res3 = req1.executeQuery();		
+						supprimmerPhotosSansCommande(idI);
+						//PreparedStatement req8 = conn.prepareStatement("delete from photo where idI=?");
+						//req8.setInt(1,idI);
+						//ResultSet res4 = req8.executeQuery();
+					}
+				
 			}
 		 
 	 }
 	 
-	 public void verifListeSuppPrestataire() throws SQLException {
-		 PreparedStatement req = conn.prepareStatement("select idS from ListeSuppPrestataire natural where nbLot=0");
+	 private void supprimmerPhotosSansCommande(int idI) throws SQLException {
+		
+		 PreparedStatement req1 = conn.prepareStatement("select idPhoto from"
+		 		+ " photo join Album using(idPhoto) join lot using(idAlbum) join commande using(idCom)"
+		 		+ " where idI=? and not(statutCommande='en cours' or statutCommande='envoi partiel' )");
+			req1.setInt(1,idI);
+			ResultSet res = req1.executeQuery();
+			while(res.next()) {
+				int idPhoto = res.getInt(1);
+
+				PreparedStatement req6 = conn.prepareStatement("delete from photo where idPhoto=?");
+				req6.setInt(1, idPhoto);
+				req6.executeQuery();						
+			}
+			insererImageListeSuppp(idI);
+		
+	}
+	 
+	 
+	 private void insererImageListeSuppp(int idI) throws SQLException {
+		 PreparedStatement req2 = conn.prepareStatement("select count(idPhoto) from photo natural join commande natural join lot natural join Album where idI=? and (statutCommande='en cours' or statutCommande='envoi partiel' )");
+			req2.setInt(1,idI);
+			ResultSet res2 = req2.executeQuery();
+			while(res2.next()) {
+				int nbPhoto = res2.getInt(1);
+					if (nbPhoto>0) {
+						PreparedStatement req7 = conn.prepareStatement("insert into ListeSuppImage values (?,?)");
+						req7.setInt(1, idI);
+						req7.setInt(2, nbPhoto);
+						req7.executeQuery();	
+					}
+			}
+	 }
+
+	 public void changerStatutCommande(int idCom,String statut) throws SQLException {
+			PreparedStatement req1 = conn.prepareStatement("update commande set statutcommande=? where idCom=?");
+			req1.setString(1,statut);
+			req1.setInt(2,idCom);
+
+			ResultSet res3 = req1.executeQuery();		
+	 }
+	 
+	public void verifListeSuppPrestataire() throws SQLException {
+		 PreparedStatement req = conn.prepareStatement("select idS from ListeSuppPrestataire where nbLot=0");
 			ResultSet res = req.executeQuery();
 						
 			while(res.next()) {
@@ -289,7 +362,7 @@ public class InterfaceGestion {
 	 
 	 
 	 public void verifListeSuppClient() throws SQLException {
-		 PreparedStatement req = conn.prepareStatement("select mailClient from ListeSuppClient natural where nbCommande=0 and nbImageP=0");
+		 PreparedStatement req = conn.prepareStatement("select mailClient from ListeSuppClient where nbCommande=0 and nbImageP=0");
 			ResultSet res = req.executeQuery();
 						
 			while(res.next()) {

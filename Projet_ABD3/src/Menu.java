@@ -23,6 +23,9 @@ public class Menu {
 		System.out.println("** 8- Ajouter un lot � une commande");
 		System.out.println("** 9- Partager un image");
 		System.out.println("** 10- Afficher les photos d'un album ");
+		System.out.println("** 11- Supprimmer un image ");
+		System.out.println("** 12- Supprimmer un album ");
+		System.out.println("** 13- Supprimmer une photo d'un album ");
 		System.out.println("** 99- Deconnecter");
 		System.out.println("** 999- Quitter l'application");
 		System.out.println("**********************************************");
