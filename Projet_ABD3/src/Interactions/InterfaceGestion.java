@@ -462,7 +462,10 @@ public class InterfaceGestion {
 				req1.setInt(3,idF);
 
 				ResultSet res3 = req1.executeQuery();	 
-			 
+				conn.commit();
+				
+				System.out.println("Modification du prix unitaire réussi !");
+
 	 }
 	 	 
 	 public void AfficherPrestataires() throws SQLException {
