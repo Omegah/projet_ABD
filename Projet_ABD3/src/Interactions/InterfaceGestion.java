@@ -234,7 +234,7 @@ public class InterfaceGestion {
 		  * A COMPLETER !
 		  */	 
 		 
-			PreparedStatement req2 = conn.prepareStatement("select count(idCom) from commande where mailClient=? and (statutcommande='envoi partiel' or statutcommande='en cour' )");
+			PreparedStatement req2 = conn.prepareStatement("select count(idCom) from commande where mailClient=? and (statutcommande='envoie partiel' or statutcommande='en cours' )");
 			req2.setString(1,mail);
 			ResultSet res2 = req2.executeQuery();
 			res2.next();
@@ -256,18 +256,24 @@ public class InterfaceGestion {
 						req1.setInt(1,idCom);
 						ResultSet res3 = req5.executeQuery();
 								while(res3.next()) {
+										int idLot =res3.getInt(1);
 										PreparedStatement req8 = conn.prepareStatement("delete from livraison where idLot=?");
-										req8.setInt(1, idCom);
+										req8.setInt(1, idLot);
 										req8.executeQuery();	
 								}
+							System.out.println("loool");
 							
-						PreparedStatement req4 = conn.prepareStatement("delete from Lot where idCom=?");
-						req4.setInt(1, idCom);
-						req4.executeQuery();	
-
-						PreparedStatement req6 = conn.prepareStatement("delete from commande where idCom=?");
-						req6.setInt(1, idCom);
-						req6.executeQuery();						
+							
+										PreparedStatement req9 = conn.prepareStatement("delete from Lot where idCom=?");
+										req9.setInt(1, idCom);
+										req9.executeQuery();	
+								
+	
+										PreparedStatement req6 = conn.prepareStatement("delete from commande where idCom=?");
+										req6.setInt(1, idCom);
+										req6.executeQuery();	
+									
+					
 					}
 				/*
 				PreparedStatement req3 = conn.prepareStatement("delete from Client where mailClient=?");
@@ -289,6 +295,8 @@ public class InterfaceGestion {
 				*/
 			}
 			else {
+				System.out.println("laaaal");
+
 				PreparedStatement st2 = conn.prepareStatement("insert into ListeSuppClient values (?,?,?)");
 				st2.setString(1, mail);
 				st2.setInt(2, nbCom);
