@@ -8,10 +8,10 @@ import java.util.Scanner;
 
 import javax.swing.JLabel;
 
-
 public class InterfaceGestion {
 
 	private static Connection conn;
+	//private static InterfaceClient interfaceClient;
 	//private static int id = 1;
 	
 	public InterfaceGestion(Connection conn){
@@ -367,15 +367,68 @@ public class InterfaceGestion {
 	 }
 
 	 public void changerStatutCommande(int idCom,String statut) throws SQLException {
-			PreparedStatement req1 = conn.prepareStatement("update commande set statutcommande=? where idCom=?");
+		boolean ok = false;
+		System.out.println("--- Modification de statut commande ---");
+		 if(statut.equals("envoie complet")){
+			ok= verifLivraison(idCom);
+		
+		 if(ok){
+			
+		 PreparedStatement req1 = conn.prepareStatement("update commande set statutcommande=? where idCom=?");
 			req1.setString(1,statut);
 			req1.setInt(2,idCom);
 
-			ResultSet res3 = req1.executeQuery();	
-			conn.commit();
 
+			ResultSet res3 = req1.executeQuery();
+			System.out.println("Modification REUSSI !!");
+			updateListeSuppImg(idCom);
+		 }else{
+				System.out.println("Il manque des livraisons pas envoye !");
+			}	
+		 }else{
+			 PreparedStatement req1 = conn.prepareStatement("update commande set statutcommande=? where idCom=?");
+				req1.setString(1,statut);
+				req1.setInt(2,idCom);
+				ResultSet res3 = req1.executeQuery();
+				System.out.println("Modification Commande REUSSI !!");
+				conn.commit();
+		 }
 	 }
 	 
+	private void updateListeSuppImg(int idCom) throws SQLException{
+		int idI = 0,nb;
+		PreparedStatement req = conn.prepareStatement("select idI from Lot natural join album natural join Photo  natural join image where idcom=?");
+		req.setInt(1, idCom);
+		ResultSet res = req.executeQuery();
+		while(res.next()){
+			idI = res.getInt(1);
+		}
+		req = conn.prepareStatement("select nbPhotos from ListeSuppImage where idI = ?");
+		req.setInt(1, idI);
+		res = req.executeQuery();
+		while(res.next()){
+			nb = res.getInt(1);
+		}
+		//if(nb==0){
+			
+			
+		//}
+	}
+
+	private boolean verifLivraison(int idcom) throws SQLException{
+		String statutL;
+		PreparedStatement req = conn.prepareStatement("select statutLivraison from Livraison natural join Lot natural join Commande where idcom=?" );
+		req.setInt(1, idcom);
+		ResultSet res = req.executeQuery();
+		while(res.next()){
+			statutL = res.getString(1);
+			if(statutL.equals("en cours") || statutL.equals("envoie partiel")){
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public void verifListeSuppPrestataire() throws SQLException {
 		 PreparedStatement req = conn.prepareStatement("select idS from ListeSuppPrestataire where nbLot=0");
 			ResultSet res = req.executeQuery();
@@ -460,4 +513,65 @@ public class InterfaceGestion {
 			rs.close();
 			req2.close();
 	 }
+
+	public void AfficherCommande() throws SQLException {
+		int idcom,prixT;
+		String mailC,statutC;
+		PreparedStatement req = conn.prepareStatement("select * from commande");
+		ResultSet res = req.executeQuery();
+		System.out.println("--- Liste des commandes ---");
+		System.out.println("idcom | mailClient | prixTotal | statutCommande");
+		while(res.next()){
+			idcom = res.getInt(1);
+			mailC = res.getString(2);
+			prixT = res.getInt(3);
+			statutC = res.getString(4);
+			System.out.println(idcom+" | "+mailC+" | "+prixT+" | "+statutC);
+		}
+	}
+
+	public void AfficherLivraison() throws SQLException {
+		int idLivraison,idLot;
+		String statutL;
+		PreparedStatement req = conn.prepareStatement("select * from livraison");
+		System.out.println("--- Affichage des livraisons --- ");
+		System.out.println("idLivraison | idLot | statutLot");
+		ResultSet res = req.executeQuery();
+		while(res.next()){
+			idLivraison = res.getInt(1);
+			idLot = res.getInt(2);
+			statutL = res.getString(3);
+			System.out.println(idLivraison+" | "+idLot+" | "+statutL);
+		}
+		
+	}
+
+	public void changerStatutLivraison(int idL, String statut) throws SQLException{
+		PreparedStatement req1 = conn.prepareStatement("update Livraison set statutLivraison=? where idLivraison=?");
+		req1.setString(1,statut);
+		req1.setInt(2,idL);
+
+		ResultSet res3 = req1.executeQuery();
+		System.out.println("Modification Livraison REUSSI !!");
+		conn.commit();
+		
+	}
+
+	public void afficherListeSuppImg() throws SQLException{
+		int idI,nb;
+		
+		PreparedStatement req = conn.prepareStatement("select * from listesuppimage");
+		System.out.println("--- Affichage des liste d'attente de suppression des images --- ");
+		System.out.println("idI | nbPhotos");
+		ResultSet res = req.executeQuery();
+		while(res.next()){
+			idI = res.getInt(1);
+			nb = res.getInt(2);
+			
+			System.out.println(idI+" | "+nb);
+		}
+		
+	}
+	
+	
 }

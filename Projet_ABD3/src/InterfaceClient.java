@@ -693,8 +693,9 @@ public class InterfaceClient {
 			req.setInt(2, idS);
 			ResultSet res = req.executeQuery();
 			while (res.next()) {
+
 				nouveauStock = res.getInt(1);
-				System.out.println("la societe à un stock de " + nouveauStock);
+				System.out.println("la societe ï¿½ un stock de " + nouveauStock);
 
 			}
 
@@ -837,7 +838,7 @@ public class InterfaceClient {
 				if (statut.equals("en creation")) {
 					return true;
 				} else {
-					System.out.println("Ne peut etre modifié : Commandé");
+					System.out.println("Ne peut etre modifiï¿½ : Commandï¿½");
 					return false;
 				}
 			}
@@ -863,7 +864,7 @@ public class InterfaceClient {
 				if (statut.equals("en creation")) {
 					return true;
 				} else {
-					System.out.println("Ne peut etre modifié : Commandé");
+					System.out.println("Ne peut etre modifiï¿½ : Commandï¿½");
 					return false;
 				}
 			}
@@ -875,11 +876,13 @@ public class InterfaceClient {
 
 	}
 
+
 	private void verifListeSuppImage() {
 		try {
 			int idI;
-			PreparedStatement req = conn
-					.prepareStatement("select idI from ListeSuppImage where nbImage = 0");
+
+			PreparedStatement req = conn.prepareStatement("select idI from ListeSuppImage where nbPhotos = 0");
+
 			ResultSet res = req.executeQuery();
 			while (res.next()) {
 				idI = res.getInt(1);
@@ -898,6 +901,8 @@ public class InterfaceClient {
 				req.executeQuery();
 				System.out.println("L'image " + idI + " est supprimee !! ");
 				conn.commit();
+				
+				System.out.println("Liste de Supp Image updated");
 			}
 
 		} catch (SQLException e) {
